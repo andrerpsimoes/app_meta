@@ -8,7 +8,7 @@ $pedido_por = $_POST['pedido_por'];
 $prioridade = $_POST['prioridade'];
 $zona = $_POST['zona'];
 $local = $_POST['local'];
-$contacto_responsavel = $_POST['contacto_levantamento'];
+$contacto_responsavel = $_POST['contacto_responsavel'];
 $observacoes = $_POST['observacoes'];
 
 
