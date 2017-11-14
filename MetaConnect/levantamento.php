@@ -24,7 +24,7 @@ include 'configs/config2.php'; // eticadata DB
 
 
                         <div class="row">
-                            <form class="col s12" method="POST" style="margin-top: 50px; margin-bottom: 50px;">
+                            <form class="col s12" method="POST" id="formId" style="margin-top: 50px; margin-bottom: 50px;">
 
 
                                 <div class="row">
@@ -32,7 +32,7 @@ include 'configs/config2.php'; // eticadata DB
                                         <div class="row">
                                             <div class="input-field col s12">
                                                 <i class="material-icons prefix">perm_identity</i>
-                                                <input type="text" name="nome_cliente" id="autocomplete-input" class="autocomplete">
+                                                <input type="text" name="nome_cliente" id="autocomplete-input" class="autocomplete" required>
                                                 <label for="autocomplete-input">Cliente</label>
                                             </div>
                                         </div>
@@ -73,7 +73,7 @@ include 'configs/config2.php'; // eticadata DB
                                 <div class="row">
                                     <div class="input-field col s4">
                                         <i class="material-icons prefix">perm_identity</i>
-                                        <input id="pedidopor" type="text" class="validate">
+                                        <input id="pedidopor" type="text" class="validate" required>
                                         <label for="icon_prefix">Pedido por:</label>
                                     </div>
                                     <div class="input-field col s4">
@@ -341,11 +341,53 @@ include 'configs/config2.php'; // eticadata DB
                 $("#BtnAssist").click(function () {
                     var mobiliario = $('#mobiliario').is(":checked") ? mobiliario = $('#mobiliario').val() : mobiliario = null;
                     var copia_imp = $('#copia_imp').is(":checked") ? copia_imp = $('#copia_imp').val() : copia_imp = null;
+                    var video_proj = $('#video_proj').is(":checked") ? video_proj = $('#video_proj').val() : video_proj = null;
+                    var video_conf = $('#video_conf').is(":checked") ? video_conf = $('#video_conf').val() : video_conf = null;
+                    var audio = $('#audio').is(":checked") ? audio = $('#audio').val() : audio = null;
+                    var equipamento = $('#equipamento').is(":checked") ? equipamento = $('#equipamento').val() : equipamento = null;
+                    var relogio_ponto = $('#relogio_ponto').is(":checked") ? relogio_ponto = $('#relogio_ponto').val() : relogio_ponto = null;
+                    var erp = $('#erp').is(":checked") ? erp = $('#erp').val() : erp = null;
+                    var ups = $('#ups').is(":checked") ? ups = $('#ups').val() : ups = null;
+                    var servidor = $('#servidor').is(":checked") ? servidor = $('#servidor').val() : servidor = null;
+                    var switch_r = $('#switch').is(":checked") ? switch_r = $('#switch').val() : switch_r = null;
+                    var router = $('#router').is(":checked") ? router = $('#router').val() : router = null;
+                    var wifi = $('#wifi').is(":checked") ? wifi = $('#wifi').val() : wifi = null;
+                    var radio_comun = $('#radio_comun').is(":checked") ? radio_comun = $('#radio_comun').val() : radio_comun = null;
+                    var central_tel = $('#central_tel').is(":checked") ? central_tel = $('#central_tel').val() : central_tel = null;
+                    var coaxial = $('#coaxial').is(":checked") ? coaxial = $('#coaxial').val() : coaxial = null;
+                    var cobre = $('#cobre').is(":checked") ? cobre = $('#cobre').val() : cobre = null;
+                    var fibra_otica = $('#fibra_otica').is(":checked") ? fibra_otica = $('#fibra_otica').val() : fibra_otica = null;
+                    var bastidores = $('#bastidores').is(":checked") ? bastidores = $('#bastidores').val() : bastidores = null;
+                    var medidas_auto = $('#medidas_auto').is(":checked") ? medidas_auto = $('#medidas_auto').val() : medidas_auto = null;
+                    var portas_cf = $('#portas_cf').is(":checked") ? portas_cf = $('#portas_cf').val() : portas_cf = null;
+                    var compartimentacao = $('#compartimentacao').is(":checked") ? compartimentacao = $('#compartimentacao').val() : compartimentacao = null;
+                    var desenfumagem = $('#desenfumagem').is(":checked") ? desenfumagem = $('#desenfumagem').val() : desenfumagem = null;
+                    var extincao_agua = $('#extincao_agua').is(":checked") ? extincao_agua = $('#extincao_agua').val() : extincao_agua = null;
+                    var extincao_auto = $('#extincao_auto').is(":checked") ? extincao_auto = $('#extincao_auto').val() : extincao_auto = null;
+                    var sinalizacao_seg = $('#sinalizacao_seg').is(":checked") ? sinalizacao_seg = $('#sinalizacao_seg').val() : sinalizacao_seg = null;
+                    var extintores = $('#extintores').is(":checked") ? extintores = $('#extintores').val() : extintores = null;
+                    var sadg = $('#sadg').is(":checked") ? sadg = $('#sadg').val() : sadg = null;
+                    var sadir = $('#sadir').is(":checked") ? sadir = $('#sadir').val() : sadir = null;
+                    var sadi = $('#sadi').is(":checked") ? sadi = $('#sadi').val() : sadi = null;
+                    var cctv = $('#cctv').is(":checked") ? cctv = $('#cctv').val() : cctv = null;
+                    var controlo_acesso = $('#controlo_acesso').is(":checked") ? controlo_acesso = $('#controlo_acesso').val() : controlo_acesso = null;
 
-                    /*var checkcopia = $('#copia_imp').is(":checked");
-                     if (checkcopia) {
-                     var copia_imp = $('#copia_imp').val();
-                     }*/
+                    
+                    var dados={
+                                pedido_por: $("#pedidopor").val(),
+                                prioridade: $("#prioridade").val(),
+                                zona: $("#zona").val(),
+                                local: $("#local").val(),
+                                contacto_responsavel: $("#contacto_responsavel").val(),
+                                observacoes: $("#observacoes").val()
+                            };
+                            
+                            
+                     if (!dados.pedido_por || !dados.prioridade || !dados.zona || !dados.local || !dados.contacto_responsavel || !dados.observacoes) {
+                         alert("Preencha todos os campos! Toast!!");
+                         
+                     }else {
+	  
                     var valortextCliente = $("#autocomplete-input").val(),
                             data = {
                                 id_cliente: valortextCliente.substr(0, valortextCliente.indexOf(' ')),
@@ -357,6 +399,36 @@ include 'configs/config2.php'; // eticadata DB
                                 observacoes: $("#observacoes").val(),
                                 mobiliario: mobiliario,
                                 copia_imp: copia_imp,
+                                video_proj: video_proj,
+                                video_conf: video_conf,
+                                audio: audio,
+                                equipamento: equipamento,
+                                relogio_ponto: relogio_ponto,
+                                erp: erp,
+                                ups: ups,
+                                servidor: servidor,
+                                switch_r: switch_r,
+                                router: router,
+                                wifi: wifi,
+                                radio_comun: radio_comun,
+                                central_tel: central_tel,
+                                coaxial: coaxial,
+                                cobre: cobre,
+                                fibra_otica: fibra_otica,
+                                bastidores: bastidores,
+                                medidas_auto: medidas_auto,
+                                portas_cf: portas_cf,
+                                compartimentacao: compartimentacao,
+                                desenfumagem: desenfumagem,
+                                extincao_agua: extincao_agua,
+                                extincao_auto: extincao_auto,
+                                sinalizacao_seg: sinalizacao_seg,
+                                extintores: extintores,
+                                sadg: sadg,
+                                sadir: sadir,
+                                sadi: sadi,
+                                cctv: cctv,
+                                controlo_acesso: controlo_acesso
                             };
                     alert(JSON.stringify(data));
                     $.ajax({
@@ -366,13 +438,18 @@ include 'configs/config2.php'; // eticadata DB
                         url: 'php/Levantamentos/insertLevant.php',
                         success: function (response) {
                             alert(response);
+                            
                         },
                         error: function () {
                             alert("nao deu");
                         }
                     });
+                    $("#formId")[0].reset()
+               
+}
 
-                });
+                   });  
+                  
 
 
 
