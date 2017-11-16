@@ -1,6 +1,14 @@
 <?php
 include '../../configs/config2.php'; // eticadata DB
 include '../../configs/config.php'; //meta DB
+
+
+$id_cliente = $_POST['id_cliente'];
+$id_lastLevantamento = $_POST['id_lastLevantamento'];
+
+echo $id_cliente;
+echo $id_lastLevantamento;
+
 ?>
 
 <!doctype html>
@@ -9,6 +17,7 @@ include '../../configs/config.php'; //meta DB
         <meta charset="utf-8">
         <title>A simple, clean, and responsive HTML invoice template</title>
 
+  
         <style>
             .invoice-box {
                 max-width: auto;
@@ -150,48 +159,92 @@ include '../../configs/config.php'; //meta DB
                 <label>Cliente</label>
             </div>
 
+
+            <div class="row">
             <?php
-            $statement = $conn_etica->prepare("select strNome, strMorada_lin1, strLocalidade, strPostal, strNumContrib, strTelefone from Tbl_Clientes where intCodigo = 26");
+            $statement = $conn_etica->prepare("select strNome, strMorada_lin1, strLocalidade, strPostal, strNumContrib, strTelefone from Tbl_Clientes where intCodigo = 12");
             $statement->execute();
             $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             //print_r($results);
-
+            
             foreach ($results as $result) {
-                ?>
-            <div class="row">
-                <div class="input-field col s4">
-                    <?php
-                    echo "<b>Nome:</b>" . $result["strNome"] . "<br>";
-                    ?>
+                
+                
+              echo '  
+                <div class="input-field col s12">
+                   <b>Nome: </b>' . $result["strNome"] . '<br>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    <?php
-                    echo "Morada:" . $result["strMorada_lin1"] . "<br>";
-                    ?>
+            
+                <div class="input-field col s6">
+                   <b>Morada: </b>' . $result["strMorada_lin1"] . '<br>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    <?php
-                    echo "Localidade:" . $result["strLocalidade"] . "<br>";
-                    ?>
+            
+                <div class="input-field col s6">
+                    <b>Localidade: </b>' . $result["strLocalidade"] . '<br>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    <?php
-                    echo "Código-Postal:" . $result["strPostal"] . "<br>";
-                    ?>
-                </div>
-            </div>
-            <?php
-            }
-            ?>
 
+                <div class="input-field col s4">
+                    <b>Código-Postal: </b>' . $result["strPostal"] . '<br>
+                </div>
+
+                <div class="input-field col s4">
+                    <b>Telefone: </b>' . $result["strTelefone"] . '<br>
+                </div>
+            
+                <div class="input-field col s4">
+                   <b>Contribuinte: </b>' . $result["strNumContrib"] . '<br>
+                </div>';
+             }
+            ?>
+        </div>
+
+            <br>
+            <div class="Levantamento" style="background-color: #eee; color: black;font-weight: bold;">
+                <label>Levantamento</label>
+            </div>
+
+                        <div class="row">
+            <?php
+            $statement = $conn_meta->prepare("select recebido_pessoa, prioridade, zona, local, contato_responsavel, observacoes from levantamento where id = 19");
+            $statement->execute();
+            $results_meta = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            //print_r($results);
+            
+            $stat = $conn_meta->prepare("select la.id_area, a.descricao from levantamento_area as la, area as a where la.id_levantamento=19 and a.id= la.id_area and la.is_active=1");
+            foreach ($results_meta as $result) {
+                
+                
+              echo '  
+                <div class="input-field col s12">
+                   <b>Recebido por: </b>' . $result["recebido_pessoa"] . '<br>
+                </div>
+            
+                <div class="input-field col s6">
+                   <b>Prioridade: </b>' . $result["prioridade"] . '<br>
+                </div>
+            
+                <div class="input-field col s6">
+                    <b>Área: </b>' . $result[""] . '<br>
+                </div>
+
+                <div class="input-field col s4">
+                    <b>Zona: </b>' . $result["zona"] . '<br>
+                </div>
+
+                <div class="input-field col s4">
+                    <b>Local: </b>' . $result["local"] . '<br>
+                </div>
+            
+                <div class="input-field col s4">
+                   <b>Contacto Responsável: </b>' . $result["contato_responsavel"] . '<br>
+                </div>';
+             }
+            ?>
+        </div>
 
         </div>
+          
     </body>
 </html>

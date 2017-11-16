@@ -10,6 +10,7 @@ $html = '<!doctype html>
         <meta charset="utf-8">
         <title>A simple, clean, and responsive HTML invoice template</title>
 
+
         <style>
             .invoice-box {
                 max-width: auto;
@@ -160,32 +161,37 @@ $html = '<!doctype html>
 
             foreach ($results as $result) {
             $html.='
-            <div class="row">
-                <div class="input-field col s4">
-                    
-                    Nome:' . $result["strNome"] . '<br>
-                    
+            <div class="input-field col s12">
+                   <b>Nome: </b>' . $result["strNome"] . '<br>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    
-                    Nome:' . $result["strNome"] . '<br>
-                    
+            
+                <div class="input-field col s6">
+                   <b>Morada: </b>' . $result["strMorada_lin1"] . '<br>
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s4">
-                    
-                    Nome:' . $result["strNome"] . '<br>
-                    
+            
+                <div class="input-field col s6">
+                    <b>Localidade: </b>' . $result["strLocalidade"] . '<br>
                 </div>
-            </div>' ;
+
+                <div class="input-field col s4">
+                    <b>Código-Postal: </b>' . $result["strPostal"] . '<br>
+                </div>
+
+                <div class="input-field col s4">
+                    <b>Telefone: </b>' . $result["strTelefone"] . '<br>
+                </div>
+            
+                <div class="input-field col s2">
+                   <b>Contribuinte: </b>' . $result["strNumContrib"] . '<br>
+                </div>' ;
             
             } 
             
 
-$html.='
+$html.='<br>
+            <div class="Levantamento" style="background-color: #eee; color: black;font-weight: bold;">
+                <label>Levantamento</label>
+            </div>
         </div>
     </body>
 </html>

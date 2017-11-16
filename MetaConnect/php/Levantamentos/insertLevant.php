@@ -49,7 +49,7 @@ $areas_filtradas = array_filter($array_areas);
 $timestamp = date('Y-m-d G:i:s');
 //echo $timestamp;
 
-print_r($array_areas);
+//print_r($array_areas);
     
 $statement = $conn_meta->prepare("INSERT INTO levantamento(id_cliente, pessoa_responsavel, local, data_hora, estado, is_active, prioridade, recebido_pessoa, zona, contato_responsavel, observacoes)"
     . " VALUES ($id_cliente, '$pedido_por', '$local', '$timestamp', 1, 1, $prioridade, 'teste', $zona, $contacto_responsavel, '$observacoes')");
@@ -57,7 +57,12 @@ $statement = $conn_meta->prepare("INSERT INTO levantamento(id_cliente, pessoa_re
 $statement->execute();
 
 $id_lastLevantamento = $conn_meta->lastInsertId();
-//echo $id;
+//echo $id_lastLevantamento;
+
+$var = array('id_cliente'=>$id_cliente, 'id_levantamento'=>$id_lastLevantamento);
+$json = json_encode($var);
+echo $json;
+
 
 foreach ($areas_filtradas as $areas){
 $query_lev_area = $conn_meta->prepare("INSERT INTO levantamento_area(id_levantamento, id_area, is_active)"

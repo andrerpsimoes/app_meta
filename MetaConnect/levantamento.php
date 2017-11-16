@@ -430,15 +430,44 @@ include 'configs/config2.php'; // eticadata DB
                                 cctv: cctv,
                                 controlo_acesso: controlo_acesso
                             };
-                    alert(JSON.stringify(data));
+                  
                     $.ajax({
 
                         type: "POST",
                         data: data,
                         url: 'php/Levantamentos/insertLevant.php',
                         success: function (response) {
-                            alert(response);
+                            //debugger;
+                             var arr = $.parseJSON(response);
+
+                            var id_lastLevantamento = arr.id_levantamento;
+                            var id_cliente = arr.id_cliente;
+
+                            var ids_pdf = {
+                                    id_lastLevantamento: id_lastLevantamento,
+                                    id_cliente: id_cliente
+                            };
                             
+                            
+                            $.ajax({
+                            
+                                type: "POST",
+                                data: ids_pdf,
+                                url:'php/Levantamentos/levantamentopdf.php',
+                                success: function (response){
+                                    alert(response);
+                                    
+
+
+
+                                },
+                                error: function () {
+                            alert("falhou para o pdf");
+                        }
+
+                            });
+
+
                         },
                         error: function () {
                             alert("nao deu");
