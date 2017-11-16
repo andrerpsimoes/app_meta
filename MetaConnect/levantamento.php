@@ -323,7 +323,7 @@ include 'configs/config2.php'; // eticadata DB
                 <?php include 'php/infogeral/navDireita.php'; ?>
             </div>
         </div>
-
+        
         <?php include 'php/infogeral/footer.php'; ?>
 
         <!-- ================================================
@@ -372,113 +372,98 @@ include 'configs/config2.php'; // eticadata DB
                     var cctv = $('#cctv').is(":checked") ? cctv = $('#cctv').val() : cctv = null;
                     var controlo_acesso = $('#controlo_acesso').is(":checked") ? controlo_acesso = $('#controlo_acesso').val() : controlo_acesso = null;
 
-                    
-                    var dados={
-                                pedido_por: $("#pedidopor").val(),
-                                prioridade: $("#prioridade").val(),
-                                zona: $("#zona").val(),
-                                local: $("#local").val(),
-                                contacto_responsavel: $("#contacto_responsavel").val(),
-                                observacoes: $("#observacoes").val()
-                            };
-                            
-                            
-                     if (!dados.pedido_por || !dados.prioridade || !dados.zona || !dados.local || !dados.contacto_responsavel || !dados.observacoes) {
-                         alert("Preencha todos os campos! Toast!!");
-                         
-                     }else {
-	  
-                    var valortextCliente = $("#autocomplete-input").val(),
-                            data = {
-                                id_cliente: valortextCliente.substr(0, valortextCliente.indexOf(' ')),
-                                pedido_por: $("#pedidopor").val(),
-                                prioridade: $("#prioridade").val(),
-                                zona: $("#zona").val(),
-                                local: $("#local").val(),
-                                contacto_responsavel: $("#contacto_responsavel").val(),
-                                observacoes: $("#observacoes").val(),
-                                mobiliario: mobiliario,
-                                copia_imp: copia_imp,
-                                video_proj: video_proj,
-                                video_conf: video_conf,
-                                audio: audio,
-                                equipamento: equipamento,
-                                relogio_ponto: relogio_ponto,
-                                erp: erp,
-                                ups: ups,
-                                servidor: servidor,
-                                switch_r: switch_r,
-                                router: router,
-                                wifi: wifi,
-                                radio_comun: radio_comun,
-                                central_tel: central_tel,
-                                coaxial: coaxial,
-                                cobre: cobre,
-                                fibra_otica: fibra_otica,
-                                bastidores: bastidores,
-                                medidas_auto: medidas_auto,
-                                portas_cf: portas_cf,
-                                compartimentacao: compartimentacao,
-                                desenfumagem: desenfumagem,
-                                extincao_agua: extincao_agua,
-                                extincao_auto: extincao_auto,
-                                sinalizacao_seg: sinalizacao_seg,
-                                extintores: extintores,
-                                sadg: sadg,
-                                sadir: sadir,
-                                sadi: sadi,
-                                cctv: cctv,
-                                controlo_acesso: controlo_acesso
-                            };
-                  
-                    $.ajax({
 
-                        type: "POST",
-                        data: data,
-                        url: 'php/Levantamentos/insertLevant.php',
-                        success: function (response) {
-                            //debugger;
-                             var arr = $.parseJSON(response);
+                    var dados = {
+                        pedido_por: $("#pedidopor").val(),
+                        prioridade: $("#prioridade").val(),
+                        zona: $("#zona").val(),
+                        local: $("#local").val(),
+                        contacto_responsavel: $("#contacto_responsavel").val(),
+                        observacoes: $("#observacoes").val()
+                    };
 
-                            var id_lastLevantamento = arr.id_levantamento;
-                            var id_cliente = arr.id_cliente;
 
-                            var ids_pdf = {
+                    if (!dados.pedido_por || !dados.prioridade || !dados.zona || !dados.local || !dados.contacto_responsavel || !dados.observacoes) {
+                        alert("Preencha todos os campos! Toast!!");
+
+                    } else {
+
+                        var valortextCliente = $("#autocomplete-input").val(),
+                                data = {
+                                    id_cliente: valortextCliente.substr(0, valortextCliente.indexOf(' ')),
+                                    pedido_por: $("#pedidopor").val(),
+                                    prioridade: $("#prioridade").val(),
+                                    zona: $("#zona").val(),
+                                    local: $("#local").val(),
+                                    contacto_responsavel: $("#contacto_responsavel").val(),
+                                    observacoes: $("#observacoes").val(),
+                                    mobiliario: mobiliario,
+                                    copia_imp: copia_imp,
+                                    video_proj: video_proj,
+                                    video_conf: video_conf,
+                                    audio: audio,
+                                    equipamento: equipamento,
+                                    relogio_ponto: relogio_ponto,
+                                    erp: erp,
+                                    ups: ups,
+                                    servidor: servidor,
+                                    switch_r: switch_r,
+                                    router: router,
+                                    wifi: wifi,
+                                    radio_comun: radio_comun,
+                                    central_tel: central_tel,
+                                    coaxial: coaxial,
+                                    cobre: cobre,
+                                    fibra_otica: fibra_otica,
+                                    bastidores: bastidores,
+                                    medidas_auto: medidas_auto,
+                                    portas_cf: portas_cf,
+                                    compartimentacao: compartimentacao,
+                                    desenfumagem: desenfumagem,
+                                    extincao_agua: extincao_agua,
+                                    extincao_auto: extincao_auto,
+                                    sinalizacao_seg: sinalizacao_seg,
+                                    extintores: extintores,
+                                    sadg: sadg,
+                                    sadir: sadir,
+                                    sadi: sadi,
+                                    cctv: cctv,
+                                    controlo_acesso: controlo_acesso
+                                };
+
+                        $.ajax({
+
+                            type: "POST",
+                            data: data,
+                            url: 'php/Levantamentos/insertLevant.php',
+                            success: function (response) {
+                                debugger;
+                                var arr = $.parseJSON(response);
+
+                                var id_lastLevantamento = arr.id_levantamento;
+                                var id_cliente = arr.id_cliente;
+
+                                var ids_pdf = {
                                     id_lastLevantamento: id_lastLevantamento,
                                     id_cliente: id_cliente
-                            };
-                            
-                            
-                            $.ajax({
-                            
-                                type: "POST",
-                                data: ids_pdf,
-                                url:'php/Levantamentos/levantamentopdf.php',
-                                success: function (response){
-                                    alert(response);
+                                };
                                     
+                                    window.open('http://localhost:82/1904/MetaConnect/php/levantamentos/levantamentopdf.php?a='+id_lastLevantamento+'&b='+id_cliente, '_blank');
+                                    
+                               
 
 
+                            },
+                            error: function () {
+                                alert("nao deu");
+                            }
+                        });
+                        $("#formId")[0].reset()
 
-                                },
-                                error: function () {
-                            alert("falhou para o pdf");
-                        }
+                    }
 
-                            });
+                });
 
-
-                        },
-                        error: function () {
-                            alert("nao deu");
-                        }
-                    });
-                    $("#formId")[0].reset()
-               
-}
-
-                   });  
-                  
 
 
 

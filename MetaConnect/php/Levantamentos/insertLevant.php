@@ -46,7 +46,7 @@ $controlo_acesso = $_POST['controlo_acesso'];
 
 $array_areas = array($mobiliario,$copia_imp,$video_proj,$video_conf,$audio,$equipamento,$relogio_ponto,$erp,$ups,$servidor,$switch_r,$router,$wifi,$radio_comun,$central_tel,$coaxial,$cobre,$fibra_otica,$bastidores,$medidas_auto,$portas_cf,$compartimentacao,$desenfumagem,$extincao_agua,$extincao_auto,$sinalizacao_seg,$extintores,$sadg,$sadir,$sadi,$cctv,$controlo_acesso);
 $areas_filtradas = array_filter($array_areas);
-$timestamp = date('Y-m-d G:i:s');
+$timestamp = date('Y-m-d H:i:s');
 //echo $timestamp;
 
 //print_r($array_areas);

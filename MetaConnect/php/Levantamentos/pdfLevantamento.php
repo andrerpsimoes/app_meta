@@ -161,42 +161,79 @@ $html = '<!doctype html>
 
             foreach ($results as $result) {
             $html.='
-            <div class="input-field col s12">
+            <div class="input-field" style="width: 100%;float: left;">
                    <b>Nome: </b>' . $result["strNome"] . '<br>
                 </div>
             
-                <div class="input-field col s6">
+                <div class="input-field" style="width: 75%;float: left;">
                    <b>Morada: </b>' . $result["strMorada_lin1"] . '<br>
                 </div>
             
-                <div class="input-field col s6">
+                <div class="input-field" style="width: 25%;float: left;">
                     <b>Localidade: </b>' . $result["strLocalidade"] . '<br>
                 </div>
 
-                <div class="input-field col s4">
+                <div class="input-field" style="width: 50%;float: left;">
                     <b>Código-Postal: </b>' . $result["strPostal"] . '<br>
                 </div>
 
-                <div class="input-field col s4">
+                <div class="input-field" style="width: 50%;float: left;">
                     <b>Telefone: </b>' . $result["strTelefone"] . '<br>
                 </div>
             
-                <div class="input-field col s2">
+                <div class="input-field" style="width: 50%;float: left;">
                    <b>Contribuinte: </b>' . $result["strNumContrib"] . '<br>
-                </div>' ;
+                </div><p>
+                
+            <div class="levantamento" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;">
+                <label>Levantamento</label>
+            </div>' ;
             
             } 
             
 
-$html.='<br>
-            <div class="Levantamento" style="background-color: #eee; color: black;font-weight: bold;">
-                <label>Levantamento</label>
-            </div>
-        </div>
+
+            $statement = $conn_meta->prepare("select recebido_pessoa, prioridade, zona, local, contato_responsavel, observacoes from levantamento where id = 19");
+                $statement->execute();
+                $results_meta = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            //print_r($results);
+
+            foreach ($results_meta as $result) {
+            $html.='
+            <div class="input-field" style="width: 50%;float: left;">
+                   <b>Recebido por: </b>' . $result["recebido_pessoa"] . '<br>
+                </div>
+            
+                <div class="input-field" style="width: 50%;float: left;">
+                   <b>Prioridade: </b>' . $result["prioridade"] . '<br>
+                </div>
+            
+                <div class="input-field" style="width: 100%;float: left;">
+                    <b>Área: </b> area<br>
+                </div>
+
+                <div class="input-field" style="width: 50%;float: left;">
+                    <b>Zona: </b>' . $result["zona"] . '<br>
+                </div>
+
+                <div class="input-field" style="width: 50%;float: left;">
+                    <b>Local: </b>' . $result["local"] . '<br>
+                </div>
+            
+                <div class="input-field" style="width: 100%;float: left;">
+                   <b>Contacto Responsável: </b>' . $result["contato_responsavel"] . '<br>
+                </div>
+                
+                <div class="input-field" style="width: 100%;float: left;">
+                    <b>Observações: </b>' . $result["observacoes"] . '<br>
+                </div>' ;
+            
+            } 
+          $html.='
     </body>
 </html>
 ';
-
 
 $mpdf = new mPDF('c','A4');
 $mpdf->writeHTML($html);

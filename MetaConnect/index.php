@@ -13,7 +13,7 @@
 
       // database query
 
-      $query=$conn->prepare("select id, nome , tipoconta, mail, cor from login where username='".$myusername."' and pass='".$mypassword."'");
+      $query=$conn->prepare("select id, nome , tipoconta, mail from login where username='".$myusername."' and pass='".$mypassword."'");
    
       $query->execute();
       $result = $query;
@@ -26,8 +26,7 @@
           $_SESSION["nome"]= $row["nome"];
           $_SESSION["tipoconta"]= $row["tipoconta"];
           $_SESSION["mail"]= $row["mail"];
-          $_SESSION["cor"]= $row["cor"];
-          $_SESSION['CREATED'] = time();
+          $SESSION['CREATED'] = time();
           header("Location: page-principal.php");
          }
       }else {
