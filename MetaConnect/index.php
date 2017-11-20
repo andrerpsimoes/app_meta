@@ -13,7 +13,7 @@
 
       // database query
 
-      $query=$conn->prepare("select id, nome , tipoconta, mail from login where username='".$myusername."' and pass='".$mypassword."'");
+      $query=$conn_meta->prepare("select id, nome , tipoconta, mail from login where username='".$myusername."' and pass='".$mypassword."'");
    
       $query->execute();
       $result = $query;

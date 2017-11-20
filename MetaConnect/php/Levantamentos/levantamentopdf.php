@@ -1,4 +1,14 @@
 <?php
+/*
+include("restrito.php");
+
+//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+//iniciada, como ve que nao tem este e redirecionado para a pagina incial
+  if (isset($_GET['logout'])) {
+     session_destroy();
+     header("Refresh:0");
+  }*/
+
 include '../../configs/config2.php'; // eticadata DB
 include '../../configs/config.php'; //meta DB
 
@@ -127,7 +137,7 @@ $id_lastLevantamento = $_GET['a'];
                                     Guia de Levantamento<br>
                                     Levantamento: <?php echo $id_lastLevantamento; ?><br>
                                     Data: <?php
-                                    $statement = $conn_meta->prepare("select data_hora from levantamento where id = $id_lastLevantamento");
+                                    $statement = $conn_meta->prepare("select data_hora from servico where id = $id_lastLevantamento");
                                     $statement->execute();
                                     $result_data = $statement->fetchAll(PDO::FETCH_ASSOC);
                                     foreach ($result_data as $data) {
@@ -214,7 +224,7 @@ $id_lastLevantamento = $_GET['a'];
 
             <div class="row">
                 <?php
-                $statement = $conn_meta->prepare("select recebido_pessoa, prioridade, zona, local, contato_responsavel, observacoes from levantamento where id = $id_lastLevantamento");
+                $statement = $conn_meta->prepare("select recebido_por, pedido_por, prioridade, observacoes from servico where id = $id_lastLevantamento");
                 $statement->execute();
                 $results_meta = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -225,7 +235,7 @@ $id_lastLevantamento = $_GET['a'];
 
                     echo '
                 <div class="input-field" style="width: 50%;float: left;">
-                   <b>Recebido por: </b>' . $result["recebido_pessoa"] . '<br>
+                   <b>Recebido por: </b>' . $result["recebido_por"] . '<br>
                 </div>
             
                 <div class="input-field" style="width: 50%;float: left;">
@@ -238,7 +248,7 @@ $id_lastLevantamento = $_GET['a'];
                         echo 'Alta';
                     } echo '<br>
                 </div>';
-                    $stat = $conn_meta->prepare("select la.id_area, a.descricao, (select descricao from area where id=a.id_parent) as pai from levantamento_area as la, area as a where la.id_levantamento=$id_lastLevantamento and a.id= la.id_area and la.is_active=1");
+                    $stat = $conn_meta->prepare("select la.id_area, a.descricao, (select descricao from area where id=a.id_parent) as pai from servico_area as la, area as a where la.id_servico=$id_lastLevantamento and a.id= la.id_area and la.is_active=1");
                     $stat->execute();
                     $results_meta = $stat->fetchAll(PDO::FETCH_ASSOC);
                     
@@ -259,25 +269,6 @@ $id_lastLevantamento = $_GET['a'];
 
                     echo '<br>
                     </div>
-
-                <div class="input-field" style="width: 50%;float: left;">
-                    <b>Zona: </b>';
-                    if ($result['zona'] == 1) {
-                        echo 'Norte';
-                    } elseif ($result['zona'] == 2) {
-                        echo 'Centro';
-                    } elseif ($result['zona'] == 3) {
-                        echo 'Sul';
-                    } echo '<br>
-                </div>
-
-                <div class="input-field" style="width: 50%;float: left;">
-                    <b>Local: </b>' . $result["local"] . '<br>
-                </div>
-                
-                <div class="input-field" style="width: 100%;float: left;">
-                    <b>Contacto Responsável: </b>' . $result["contato_responsavel"] . '<br>
-                </div>
             
                 <div class="input-field" style="width: 100%;float: left;">
                    <b>Observações: </b>' . $result["observacoes"] . '<br>

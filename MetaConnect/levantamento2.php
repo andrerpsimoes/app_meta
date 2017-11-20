@@ -1,16 +1,15 @@
 <?php
 include 'configs/config2.php'; // eticadata DB
-include 'configs/config.php'; //meta DB
-/*
-  include("restrito.php");
 
-  //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
-  //iniciada, como ve que nao tem este e redirecionado para a pagina incial
+include("restrito.php");
+
+//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+//iniciada, como ve que nao tem este e redirecionado para a pagina incial
   if (isset($_GET['logout'])) {
-  session_destroy();
-  header("Refresh:0");
+     session_destroy();
+     header("Refresh:0");
   }
- */
+
 ?>
 
 
@@ -101,37 +100,19 @@ include 'configs/config.php'; //meta DB
                                 </div><br>
 
                                 <div class="row">
-                                    <div class="col s12">
-                                        <div class="switch col s4">
+                                    <div class="col s4">
+                                        <div class="switch">
                                             <i class="material-icons prefix">build</i>
-                                            <label for="first_name" style="font-size: 17px;color: black;">Projeto</label>
-                                            <label style="font-size: 17px;color: black;">
+                                            <label for="first_name" style="font-size: 20px;color: black;">Projeto</label>
+                                            <label style="font-size: 20px;color: black;">
                                                 Não
-                                                <input type="checkbox" name="checkboxproj" id="proj_check" value="sim">
+                                                <input type="checkbox">
                                                 <span class="lever"></span>
                                                 Sim
                                             </label>
                                         </div>
-                                        <div class="col s4">
-                                            <div class="form-select" id="selectproj" style="display: none;">
-                                                <select>
-                                                    <option value="" disabled selected>Escolha um projeto</option>
-                                                    <?php
-                                                    $query = $conn_meta->prepare("select id,descricao from projeto");
-                                                    $query->execute();
-                                                    $results_proj = $query->fetchAll(PDO::FETCH_ASSOC);
-                                                    foreach ($results_proj as $projetos) {
-                                                        echo "<option value='" . $projetos['id'] . "'>" . $projetos['descricao'] . "</option>";
-                                                        ;
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div><br>
-
-
 
                                 <div class="row">
                                     <div class="col s12">
@@ -342,39 +323,29 @@ include 'configs/config.php'; //meta DB
 
                 </section>
 
-<?php include 'php/infogeral/navDireita.php'; ?>
+                <?php include 'php/infogeral/navDireita.php'; ?>
             </div>
         </div>
 
-<?php include 'php/infogeral/footer.php'; ?>
+        <?php include 'php/infogeral/footer.php'; ?>
 
         <!-- ================================================
                                Scripts
       ================================================ -->
-<?php include 'php/infogeral/js.php'; ?>
+        <?php include 'php/infogeral/js.php'; ?>
 
         <script>
-
-            $(document).ready(function () {
-<?php include 'js/getclientes.js'; ?>;
-
-                $('input[name=checkboxproj]:checkbox').change(function (e) {
-                    let value = e.target.value.trim()
-
-                    //$('[class^="form"]').css('display', 'none');
-
-                    if (value == 'sim') {
-                        $('#selectproj').toggle(this.checked);
-                    } else {
-                        $('#selectproj').toggle();
-                    }
-                })
-
-
-                $('.collapsible').collapsible();
-
-
-                $("#BtnAssist").click(function () {
+            var levantamento={
+              
+                butaoSubmit: function(){
+                  debugger;
+                  var selected = [];
+                    $('#accordion input:checked').each(function() {
+                        selected.push($(this).attr('value'));
+                    });
+                    
+                    alert(selected);
+                    /*
                     var mobiliario = $('#mobiliario').is(":checked") ? mobiliario = $('#mobiliario').val() : mobiliario = null;
                     var copia_imp = $('#copia_imp').is(":checked") ? copia_imp = $('#copia_imp').val() : copia_imp = null;
                     var video_proj = $('#video_proj').is(":checked") ? video_proj = $('#video_proj').val() : video_proj = null;
@@ -412,11 +383,14 @@ include 'configs/config.php'; //meta DB
                     var dados = {
                         pedido_por: $("#pedidopor").val(),
                         prioridade: $("#prioridade").val(),
+                        zona: $("#zona").val(),
+                        local: $("#local").val(),
+                        contacto_responsavel: $("#contacto_responsavel").val(),
                         observacoes: $("#observacoes").val()
                     };
 
 
-                    if (!dados.pedido_por || !dados.prioridade || !dados.observacoes) {
+                    if (!dados.pedido_por || !dados.prioridade || !dados.zona || !dados.local || !dados.contacto_responsavel || !dados.observacoes) {
                         alert("Preencha todos os campos! Toast!!");
 
                     } else {
@@ -426,6 +400,9 @@ include 'configs/config.php'; //meta DB
                                     id_cliente: valortextCliente.substr(0, valortextCliente.indexOf(' ')),
                                     pedido_por: $("#pedidopor").val(),
                                     prioridade: $("#prioridade").val(),
+                                    zona: $("#zona").val(),
+                                    local: $("#local").val(),
+                                    contacto_responsavel: $("#contacto_responsavel").val(),
                                     observacoes: $("#observacoes").val(),
                                     mobiliario: mobiliario,
                                     copia_imp: copia_imp,
@@ -490,7 +467,17 @@ include 'configs/config.php'; //meta DB
                         });
                         $("#formId")[0].reset()
 
-                    }
+                    }*/
+                }
+              
+            };
+            $(document).ready(function () {
+<?php include 'js/getclientes.js'; ?>;
+                $('.collapsible').collapsible();
+               
+
+                $("#BtnAssist").click(function () {
+                     levantamento.butaoSubmit();
 
                 });
 

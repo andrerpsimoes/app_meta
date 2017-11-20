@@ -1,14 +1,21 @@
 <?php
+/*
+include("restrito.php");
+
+//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+//iniciada, como ve que nao tem este e redirecionado para a pagina incial
+  if (isset($_GET['logout'])) {
+     session_destroy();
+     header("Refresh:0");
+  }*/
+
 
 include '../../configs/config.php'; // MetaveiroAppTestes
 
 
 $id_cliente = $_POST['id_cliente'];
 $pedido_por = $_POST['pedido_por'];
-$prioridade = $_POST['prioridade'];
-$zona = $_POST['zona'];
-$local = $_POST['local'];
-$contacto_responsavel = $_POST['contacto_responsavel'];
+$prioridade = $_POST['prioridade'];;
 $observacoes = $_POST['observacoes'];
 $mobiliario = $_POST['mobiliario'];
 $copia_imp = $_POST['copia_imp'];
@@ -51,8 +58,8 @@ $timestamp = date('Y-m-d H:i:s');
 
 //print_r($array_areas);
     
-$statement = $conn_meta->prepare("INSERT INTO levantamento(id_cliente, pessoa_responsavel, local, data_hora, estado, is_active, prioridade, recebido_pessoa, zona, contato_responsavel, observacoes)"
-    . " VALUES ($id_cliente, '$pedido_por', '$local', '$timestamp', 1, 1, $prioridade, 'teste', $zona, $contacto_responsavel, '$observacoes')");
+$statement = $conn_meta->prepare("INSERT INTO servico(id_cliente, recebido_por, pedido_por, data_hora, observacoes, prioridade, tipo_servico, id_proj_cliente, estado, is_active)"
+    . " VALUES ($id_cliente, 'teste','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, null, 1, 1)");
 
 $statement->execute();
 
@@ -65,10 +72,10 @@ echo $json;
 
 
 foreach ($areas_filtradas as $areas){
-$query_lev_area = $conn_meta->prepare("INSERT INTO levantamento_area(id_levantamento, id_area, is_active)"
+$query_ser_area = $conn_meta->prepare("INSERT INTO servico_area(id_area, id_servico, is_active)"
         . " VALUES ($id_lastLevantamento,$areas, 1)");
 
-$query_lev_area->execute();
+$query_ser_area->execute();
 }
 
 ?>
