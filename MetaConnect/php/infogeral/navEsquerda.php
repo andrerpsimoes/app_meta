@@ -9,7 +9,7 @@
                     </a>
                 </li>
                 <li class="bold">
-                    <a class="collapsible-header waves-effect waves-cyan active">
+                    <a class="collapsible-header waves-effect waves-cyan">
                         <i class="material-icons">assistant</i>
                         <span class="nav-text">Serviços</span>
                     </a>
@@ -27,14 +27,14 @@
                                     <span>Assistência</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="obra.php">
-                                    <i class="material-icons">keyboard_arrow_right</i>
-                                    <span>Obra</span>
-                                </a>
-                            </li>
                         </ul>
                     </div>
+                </li>
+                <li class="bold">
+                    <a href="projeto.php" class="waves-effect waves-cyan">
+                        <i class="material-icons">open_in_new</i>
+                        <span class="nav-text">Projetos</span>
+                    </a>
                 </li>
                 <li class="bold">
                     <a href="#" class="waves-effect waves-cyan">

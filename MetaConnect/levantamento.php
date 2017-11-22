@@ -128,8 +128,67 @@ include 'configs/config.php'; //meta DB
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="col s4">
+                                            <a class="btn-floating waves-effect waves-light modal-trigger tooltipped" data-position="bottom" data-delay="5" data-tooltip="Criar Projeto" id="BtnProj" href="#modal1" style="display: none;">
+                                                <i class="material-icons">add</i></a>
+                                        </div>
                                     </div>
-                                </div><br>
+                                </div>
+
+                                <!-- Modal Structure -->
+                                <div id="modal1" class="modal">
+                                    <div class="modal-content">
+                                        <form class="form_modal" method="POST">
+                                            <h4>Novo Projeto</h4>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <i class="material-icons prefix">build</i>
+                                                            <input type="text" name="descricao" id="descricao" class="validate" required>
+                                                            <label for="first_name">Descrição</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s12">
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <i class="material-icons prefix">perm_identity</i>
+                                                            <input type="text" name="pessoa_responsavel" id="pessoa_responsavel" class="validate" required>
+                                                            <label for="first_name">Pessoa Responsável</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col s6">
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <i class="material-icons prefix">perm_identity</i>
+                                                            <input type="text" name="local" id="local" class="validate" required>
+                                                            <label for="first_name">Local</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col s6">
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <i class="material-icons prefix">perm_identity</i>
+                                                            <input type="text" name="contacto_responsavel" id="contacto_responsavel" class="validate" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                                            <label for="first_name">Contacto Responsável</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" type="submit" name="BtnModal" id="BtnModal">Criar</a>
+                                    </div>
+                                </div>
 
 
 
@@ -330,7 +389,7 @@ include 'configs/config.php'; //meta DB
 
                                 <div class="row">
                                     <div class="input-field col s12">
-                                        <a class="btn waves-effect waves-light right"  id="BtnAssist">Criar Assistencia
+                                        <a class="btn waves-effect waves-light right" id="BtnAssist">Criar Assistencia
                                             <i class="material-icons right">send</i>
                                         </a>
                                     </div>
@@ -342,16 +401,16 @@ include 'configs/config.php'; //meta DB
 
                 </section>
 
-<?php include 'php/infogeral/navDireita.php'; ?>
+                <?php include 'php/infogeral/navDireita.php'; ?>
             </div>
         </div>
 
-<?php include 'php/infogeral/footer.php'; ?>
+        <?php include 'php/infogeral/footer.php'; ?>
 
         <!-- ================================================
                                Scripts
       ================================================ -->
-<?php include 'php/infogeral/js.php'; ?>
+        <?php include 'php/infogeral/js.php'; ?>
 
         <script>
 
@@ -365,13 +424,62 @@ include 'configs/config.php'; //meta DB
 
                     if (value == 'sim') {
                         $('#selectproj').toggle(this.checked);
+                        $('#BtnProj').toggle();
                     } else {
                         $('#selectproj').toggle();
+                        $('#BtnProj').toggle();
                     }
-                })
+                });
 
-
+                $('#modal1').modal();
+                $('#BtnProj').tooltip({delay: 50});
                 $('.collapsible').collapsible();
+
+
+                var id_project;
+                $("#BtnModal").click(function () {
+                    var dados_modal = {
+                        descricao: $("#descricao").val(),
+                        pessoa_responsavel: $("#pessoa_responsavel").val(),
+                        contacto_responsavel: $("#contacto_responsavel").val(),
+                        local: $("#local").val()
+                    };
+
+                    if (!dados_modal.descricao || !dados_modal.pessoa_responsavel || !dados_modal.contacto_responsavel || !dados_modal.local) {
+                        Materialize.toast('Preencha todos os campos!', 3000, 'rounded');
+                    } else {
+
+                        var cliente = $("#autocomplete-input").val();
+                        var info_modal = {
+                            id_cliente: cliente.substr(0, cliente.indexOf(' ')),
+                            descricao: $("#descricao").val(),
+                            pessoa_responsavel: $('#pessoa_responsavel').val(),
+                            contacto_responsavel: $('#contacto_responsavel').val(),
+                            local: $('#local').val()
+                        };
+                        $.ajax({
+
+                            type: "POST",
+                            data: info_modal,
+                            url: 'php/Projetos/insertProj_modal.php',
+                            success: function (response) {
+                                debugger;
+                                var state = $.parseJSON(response);
+
+                                if (state.success == true) {
+                                    Materialize.toast('Projeto criado com sucesso!', 3000, 'rounded');
+                                } else {
+                                    Materialize.toast('Não foi possível criar projeto!', 3000, 'rounded');
+                                }
+                                ;
+
+                            },
+                            error: function () {
+                                alert("nao deu");
+                            }
+                        });
+                    }
+                });
 
 
                 $("#BtnAssist").click(function () {
@@ -417,7 +525,7 @@ include 'configs/config.php'; //meta DB
 
 
                     if (!dados.pedido_por || !dados.prioridade || !dados.observacoes) {
-                        alert("Preencha todos os campos! Toast!!");
+                        Materialize.toast('Preencha todos os campos!', 3000, 'rounded');
 
                     } else {
 
@@ -488,7 +596,7 @@ include 'configs/config.php'; //meta DB
                                 alert("nao deu");
                             }
                         });
-                        $("#formId")[0].reset()
+                        $("#formId")[0].reset();
 
                     }
 
