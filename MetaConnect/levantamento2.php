@@ -344,6 +344,55 @@ include("restrito.php");
                         selected.push($(this).attr('value'));
                     });
                     
+                    
+                    
+                     var dados = {
+                        id_cliente: valortextCliente.substr(0, valortextCliente.indexOf(' ')),
+                        pedido_por: $("#pedidopor").val(),
+                        prioridade: $("#prioridade").val(),
+                        zona: $("#zona").val(),
+                        local: $("#local").val(),
+                        contacto_responsavel: $("#contacto_responsavel").val(),
+                        observacoes: $("#observacoes").val(),
+                        selecionados: selected
+                    };
+
+                    if (!dados.pedido_por || !dados.prioridade || !dados.zona || !dados.local || !dados.contacto_responsavel || !dados.observacoes) {
+                        alert("Preencha todos os campos! Toast!!");
+
+                    } else {
+
+                        $.ajax({
+
+                            type: "POST",
+                            data: dados,
+                            url: 'php/Levantamentos/insertLevant.php',
+                            success: function (response) {
+                                debugger;
+                                var arr = $.parseJSON(response);
+
+                                var id_lastLevantamento = arr.id_levantamento;
+                                var id_cliente = arr.id_cliente;
+
+                                var ids_pdf = {
+                                    id_lastLevantamento: id_lastLevantamento,
+                                    id_cliente: id_cliente
+                                };
+
+                                window.open('http://localhost:82/1904/MetaConnect/php/levantamentos/levantamentopdf.php?a=' + id_lastLevantamento + '&b=' + id_cliente, '_blank');
+
+
+
+
+                            },
+                            error: function () {
+                                alert("nao deu");
+                            }
+                        });
+                        $("#formId")[0].reset()
+
+                    }
+                    
                     alert(selected);
                     /*
                     var mobiliario = $('#mobiliario').is(":checked") ? mobiliario = $('#mobiliario').val() : mobiliario = null;
