@@ -38,7 +38,6 @@ include 'configs/config.php'; //meta DB
                         <div class="row">
                             <form class="col s12" method="POST" id="formId" style="margin-top: 50px; margin-bottom: 50px;">
 
-
                                 <div class="row">
                                     <div class="col s12">
                                         <div class="row">
@@ -114,18 +113,6 @@ include 'configs/config.php'; //meta DB
                                         </div>
                                         <div class="col s4">
                                             <div class="form-select" id="selectproj" style="display: none;">
-                                                <select>
-                                                    <option value="" disabled selected>Escolha um projeto</option>
-                                                    <?php
-                                                    $query = $conn_meta->prepare("select id,descricao from projeto");
-                                                    $query->execute();
-                                                    $results_proj = $query->fetchAll(PDO::FETCH_ASSOC);
-                                                    foreach ($results_proj as $projetos) {
-                                                        echo "<option value='" . $projetos['id'] . "'>" . $projetos['descricao'] . "</option>";
-                                                        ;
-                                                    }
-                                                    ?>
-                                                </select>
                                             </div>
                                         </div>
 
@@ -416,6 +403,11 @@ include 'configs/config.php'; //meta DB
 
             $(document).ready(function () {
 <?php include 'js/getclientes.js'; ?>;
+                $('select').material_select();
+                $('#modal1').modal();
+                $('#BtnProj').tooltip({delay: 50});
+                $('.collapsible').collapsible();
+
 
                 $('input[name=checkboxproj]:checkbox').change(function (e) {
                     let value = e.target.value.trim()
@@ -429,14 +421,30 @@ include 'configs/config.php'; //meta DB
                         $('#selectproj').toggle();
                         $('#BtnProj').toggle();
                     }
+
+                    var cliente = $("#autocomplete-input").val();
+                    var data_to_select = {
+                        id_cliente: cliente.substr(0, cliente.indexOf(' '))
+                    };
+
+                    $.ajax({
+
+                        type: "POST",
+                        data: data_to_select,
+                        url: 'php/Projetos/selectProjeto.php',
+                        success: function (response) {
+                            //alert(response);
+                            $('#selectproj').html(response);
+
+                        },
+                        error: function () {
+                            alert("nao deu");
+                        }
+                    });
+
                 });
 
-                $('#modal1').modal();
-                $('#BtnProj').tooltip({delay: 50});
-                $('.collapsible').collapsible();
 
-
-                var id_project;
                 $("#BtnModal").click(function () {
                     var dados_modal = {
                         descricao: $("#descricao").val(),
@@ -532,6 +540,7 @@ include 'configs/config.php'; //meta DB
                         var valortextCliente = $("#autocomplete-input").val(),
                                 data = {
                                     id_cliente: valortextCliente.substr(0, valortextCliente.indexOf(' ')),
+                                    id_projeto: $("#select").val(),
                                     pedido_por: $("#pedidopor").val(),
                                     prioridade: $("#prioridade").val(),
                                     observacoes: $("#observacoes").val(),
@@ -568,7 +577,7 @@ include 'configs/config.php'; //meta DB
                                     cctv: cctv,
                                     controlo_acesso: controlo_acesso
                                 };
-
+                                debugger;
                         $.ajax({
 
                             type: "POST",

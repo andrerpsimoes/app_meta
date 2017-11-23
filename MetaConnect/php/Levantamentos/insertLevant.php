@@ -14,6 +14,7 @@ include '../../configs/config.php'; // MetaveiroAppTestes
 
 
 $id_cliente = $_POST['id_cliente'];
+$id_projeto = $_POST['id_projeto'];
 $pedido_por = $_POST['pedido_por'];
 $prioridade = $_POST['prioridade'];;
 $observacoes = $_POST['observacoes'];
@@ -57,9 +58,16 @@ $timestamp = date('Y-m-d H:i:s');
 //echo $timestamp;
 
 //print_r($array_areas);
-    
+
+//saber qual o id da tabela projeto_cliente para inserir na tabela serviço
+$query_proj_cli = $conn_meta->prepare("SELECT id FROM projeto_cliente WHERE id_projeto=$id_projeto and id_cliente=$id_cliente");
+$query_proj_cli->execute();
+$result = $query_proj_cli->fetch();//um unico resultado
+$id_proj_cli = $result[0];
+
+//insert tab servico um levantamento
 $statement = $conn_meta->prepare("INSERT INTO servico(id_cliente, recebido_por, pedido_por, data_hora, observacoes, prioridade, tipo_servico, id_proj_cliente, estado, is_active)"
-    . " VALUES ($id_cliente, 'teste','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, null, 1, 1)");
+    . " VALUES ($id_cliente, 'teste','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, $id_proj_cli, 1, 1)");
 
 $statement->execute();
 
