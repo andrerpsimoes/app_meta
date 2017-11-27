@@ -15,9 +15,9 @@ require_once '../mpdf/mpdf.php';
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
 
-$id_lastLevantamento = $_GET['a'];
+$id_lastAssistencia = $_GET['a'];
 
-if ($id_lastLevantamento) { //caso exista
+if ($id_lastAssistencia) { //caso exista
 
 
     /*
@@ -27,7 +27,7 @@ if ($id_lastLevantamento) { //caso exista
     $servicoDetails = $conn_meta->prepare("select s.data_hora, s.recebido_por, s.pedido_por, s.prioridade, s.observacoes, s.id_cliente, 
 (select id_projeto from projeto_cliente where is_active=1 and id=s.id_proj_cliente) as projeto, s.counter
 from servico s
-where s.id=$id_lastLevantamento");
+where s.id=$id_lastAssistencia");
 
 
     $servicoDetails->execute();
@@ -64,7 +64,7 @@ where s.id=$id_lastLevantamento");
 <html>
     <head>
         <meta charset="utf-8">
-        <title>PDF Levantamento</title>
+        <title>PDF Assistencia</title>
 
 
         <style>
@@ -174,8 +174,8 @@ where s.id=$id_lastLevantamento");
 
 
                                 <td>
-                                    Guia de Levantamento<br>
-                                    Levantamento:' . $id_counter . '<br>
+                                    Guia de Assistência<br>
+                                    Assistência: ' . date("Y") . '/' . $id_counter . '<br>
                                     Data: ' . trim($servicoDetailsResult[0], ".000") . '<br>
 
                                 </td>
@@ -237,8 +237,8 @@ where s.id=$id_lastLevantamento");
             </div>
 
             <br>
-            <div class="Levantamento" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;margin-bottom: 10px;">
-                <label>Levantamento</label>
+            <div class="Assistencia" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;margin-bottom: 10px;">
+                <label>Assistência</label>
             </div>
 
             <div class="row">
@@ -258,7 +258,7 @@ where s.id=$id_lastLevantamento");
 
 
 
-    $stat = $conn_meta->prepare("select la.id_area, a.descricao, (select descricao from area where id=a.id_parent) as pai from servico_area as la, area as a where la.id_servico=$id_lastLevantamento and a.id= la.id_area and la.is_active=1");
+    $stat = $conn_meta->prepare("select la.id_area, a.descricao, (select descricao from area where id=a.id_parent) as pai from servico_area as la, area as a where la.id_servico=$id_lastAssistencia and a.id= la.id_area and la.is_active=1");
     $stat->execute();
     $results_meta = $stat->fetchAll(PDO::FETCH_ASSOC);
 
@@ -349,7 +349,7 @@ where s.id=$id_lastLevantamento");
 
     $mpdf = new mPDF('c', 'A4');
     $mpdf->writeHTML($html);
-    $mpdf->Output('pdfLevantamento.pdf', 'I');
+    $mpdf->Output('pdfAssistencia.pdf', 'I');
 } else {
     echo 'Error 404';
 }

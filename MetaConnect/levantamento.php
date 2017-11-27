@@ -329,7 +329,7 @@ include 'configs/config.php'; //meta DB
 
                                 <div class="row">
                                     <div class="input-field col s12">
-                                        <a class="btn waves-effect waves-light right" id="BtnAssist">Criar Assistencia
+                                        <a class="btn waves-effect waves-light right" id="BtnAssist">Criar Levantamento
                                             <i class="material-icons right">send</i>
                                         </a>
                                     </div>
@@ -488,7 +488,6 @@ include 'configs/config.php'; //meta DB
                             url: 'php/Levantamentos/insertLevant.php',
                             success: function (response) {
                                 var arr = $.parseJSON(response);
-                                alert(arr.id_levantamento);
                                 window.open('http://localhost:82/1904/MetaConnect/php/levantamentos/pdfLevantamento.php?a=' + arr.id_levantamento, '_blank');
                             },
                             error: function () {
@@ -657,6 +656,7 @@ include 'configs/config.php'; //meta DB
 
 
             });
+            
         </script>
 
     </body>
