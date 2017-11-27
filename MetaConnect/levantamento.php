@@ -1,7 +1,4 @@
 <?php
-include 'configs/config2.php'; // eticadata DB
-include 'configs/config.php'; //meta DB
-/*
   include("restrito.php");
 
   //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
@@ -10,7 +7,12 @@ include 'configs/config.php'; //meta DB
   session_destroy();
   header("Refresh:0");
   }
- */
+
+
+include 'configs/config2.php'; // eticadata DB
+include 'configs/config.php'; //meta DB
+
+ 
 ?>
 
 
@@ -23,12 +25,12 @@ include 'configs/config.php'; //meta DB
     <body>
         <?php include 'php/infogeral/navSuperior.php'; ?>
 
-
+ <?php include 'php/infogeral/navEsquerda.php'; ?>
         <div id="main">
             <!-- START WRAPPER -->
             <div class="wrapper">
 
-                <?php include 'php/infogeral/navEsquerda.php'; ?>
+               
 
                 <!-- START CONTENT -->
                 <section id="content">
@@ -36,7 +38,10 @@ include 'configs/config.php'; //meta DB
 
 
                         <div class="row">
-                            <form class="col s12" method="POST" id="formId" style="margin-top: 50px; margin-bottom: 50px;">
+                            
+                            <h3 class="center">Levantamento</h3>
+                            
+                            <form class="col s12" method="POST" id="formId" style=" margin-bottom: 50px;">
 
                                 <div class="row">
                                     <div class="col s12">
@@ -117,65 +122,13 @@ include 'configs/config.php'; //meta DB
                                         </div>
 
                                         <div class="col s4">
-                                            <a class="btn-floating waves-effect waves-light modal-trigger tooltipped" data-position="bottom" data-delay="5" data-tooltip="Criar Projeto" id="BtnProj" href="#modal1" style="display: none;">
+                                            <a class="btn-floating waves-effect waves-light tooltipped" data-position="bottom" data-delay="5" data-tooltip="Criar Projeto" id="BtnProj" style="display: none;">
                                                 <i class="material-icons">add</i></a>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Modal Structure -->
-                                <div id="modal1" class="modal">
-                                    <div class="modal-content">
-                                        <form class="form_modal" method="POST">
-                                            <h4>Novo Projeto</h4>
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="row">
-                                                        <div class="input-field col s12">
-                                                            <i class="material-icons prefix">build</i>
-                                                            <input type="text" name="descricao" id="descricao" class="validate" required>
-                                                            <label for="first_name">Descrição</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col s12">
-                                                    <div class="row">
-                                                        <div class="input-field col s12">
-                                                            <i class="material-icons prefix">perm_identity</i>
-                                                            <input type="text" name="pessoa_responsavel" id="pessoa_responsavel" class="validate" required>
-                                                            <label for="first_name">Pessoa Responsável</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col s6">
-                                                    <div class="row">
-                                                        <div class="input-field col s12">
-                                                            <i class="material-icons prefix">perm_identity</i>
-                                                            <input type="text" name="local" id="local" class="validate" required>
-                                                            <label for="first_name">Local</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col s6">
-                                                    <div class="row">
-                                                        <div class="input-field col s12">
-                                                            <i class="material-icons prefix">perm_identity</i>
-                                                            <input type="text" name="contacto_responsavel" id="contacto_responsavel" class="validate" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
-                                                            <label for="first_name">Contacto Responsável</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" type="submit" name="BtnModal" id="BtnModal">Criar</a>
-                                    </div>
-                                </div>
+
 
 
 
@@ -369,9 +322,9 @@ include 'configs/config.php'; //meta DB
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">textsms</i>
-                                        <textarea id="observacoes" class="materialize-textarea"></textarea>
+                                        <textarea id="observacoes" class="materialize-textarea" maxlength="500"></textarea>
                                         <label for="textarea1">Observações</label>
-                                    </div>  
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -382,7 +335,7 @@ include 'configs/config.php'; //meta DB
                                     </div>
                                 </div>
 
-                            </form> 
+                            </form>
                         </div>
                     </div>
 
@@ -391,6 +344,68 @@ include 'configs/config.php'; //meta DB
                 <?php include 'php/infogeral/navDireita.php'; ?>
             </div>
         </div>
+
+        <!-- Modal Structure -->
+        <section id="content">
+            <div class="container">
+
+
+                <div class="row">
+                    <div id="modal1" class="modal ">
+                        <div class="modal-content">
+                            <form class="form_modal" method="POST">
+                                <h4>Novo Projeto</h4>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <i class="material-icons prefix">build</i>
+                                                <input type="text" name="descricao" id="descricao" class="validate" required>
+                                                <label for="first_name">Descrição</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <i class="material-icons prefix">perm_identity</i>
+                                                <input type="text" name="pessoa_responsavel" id="pessoa_responsavel" class="validate" required>
+                                                <label for="first_name">Pessoa Responsável</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s6">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <i class="material-icons prefix">perm_identity</i>
+                                                <input type="text" name="local" id="local" class="validate" required>
+                                                <label for="first_name">Local</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col s6">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <i class="material-icons prefix">perm_identity</i>
+                                                <input type="text" name="contacto_responsavel" id="contacto_responsavel" class="validate" onkeypress="return event.charCode >= 48 && event.charCode <= 57" required>
+                                                <label for="first_name">Contacto Responsável</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" type="submit" name="BtnModal" id="BtnModal">Criar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <?php include 'php/infogeral/footer.php'; ?>
 
@@ -401,138 +416,57 @@ include 'configs/config.php'; //meta DB
 
         <script>
 
-            $(document).ready(function () {
-<?php include 'js/getclientes.js'; ?>;
-                $('select').material_select();
-                $('#modal1').modal();
-                $('#BtnProj').tooltip({delay: 50});
-                $('.collapsible').collapsible();
+            var levantamento={
+                
+              //********variaveis globais********
+                
+              MensagemErro:"Ocorreu um erro, por favor contacte o administrador do sistema.",  
+                
+                
+              //********Fim variaveis globais********
+                
+              atualizaProjetos: function (){
+                  
+                    if ($('#proj_check:checkbox:checked').length>0) {
+                        var cliente = $("#autocomplete-input").val(),
+                            data_to_select = {
+                                id_cliente: cliente.substr(0, cliente.indexOf(' '))
+                            };
 
-
-                $('input[name=checkboxproj]:checkbox').change(function (e) {
-                    let value = e.target.value.trim()
-
-                    //$('[class^="form"]').css('display', 'none');
-
-                    if (value == 'sim') {
-                        $('#selectproj').toggle(this.checked);
-                        $('#BtnProj').toggle();
-                    } else {
-                        $('#selectproj').toggle();
-                        $('#BtnProj').toggle();
-                    }
-
-                    var cliente = $("#autocomplete-input").val();
-                    var data_to_select = {
-                        id_cliente: cliente.substr(0, cliente.indexOf(' '))
-                    };
-
-                    $.ajax({
-
-                        type: "POST",
-                        data: data_to_select,
-                        url: 'php/Projetos/selectProjeto.php',
-                        success: function (response) {
-                            //alert(response);
-                            $('#selectproj').html(response);
-
-                        },
-                        error: function () {
-                            alert("nao deu");
-                        }
-                    });
-
-                });
-
-
-                $("#BtnModal").click(function () {
-                    var dados_modal = {
-                        descricao: $("#descricao").val(),
-                        pessoa_responsavel: $("#pessoa_responsavel").val(),
-                        contacto_responsavel: $("#contacto_responsavel").val(),
-                        local: $("#local").val()
-                    };
-
-                    if (!dados_modal.descricao || !dados_modal.pessoa_responsavel || !dados_modal.contacto_responsavel || !dados_modal.local) {
-                        Materialize.toast('Preencha todos os campos!', 3000, 'rounded');
-                    } else {
-
-                        var cliente = $("#autocomplete-input").val();
-                        var info_modal = {
-                            id_cliente: cliente.substr(0, cliente.indexOf(' ')),
-                            descricao: $("#descricao").val(),
-                            pessoa_responsavel: $('#pessoa_responsavel').val(),
-                            contacto_responsavel: $('#contacto_responsavel').val(),
-                            local: $('#local').val()
-                        };
                         $.ajax({
-
                             type: "POST",
-                            data: info_modal,
-                            url: 'php/Projetos/insertProj_modal.php',
+                            data: data_to_select,
+                            url: 'php/Projetos/selectProjeto.php',
                             success: function (response) {
-                                debugger;
-                                var state = $.parseJSON(response);
-
-                                if (state.success == true) {
-                                    Materialize.toast('Projeto criado com sucesso!', 3000, 'rounded');
-                                } else {
-                                    Materialize.toast('Não foi possível criar projeto!', 3000, 'rounded');
-                                }
-                                ;
-
+                                $('#selectproj').html(response);
                             },
                             error: function () {
-                                alert("nao deu");
+                                alert(levantamento.MensagemErro);
                             }
                         });
                     }
-                });
-
-
-                $("#BtnAssist").click(function () {
-                    var mobiliario = $('#mobiliario').is(":checked") ? mobiliario = $('#mobiliario').val() : mobiliario = null;
-                    var copia_imp = $('#copia_imp').is(":checked") ? copia_imp = $('#copia_imp').val() : copia_imp = null;
-                    var video_proj = $('#video_proj').is(":checked") ? video_proj = $('#video_proj').val() : video_proj = null;
-                    var video_conf = $('#video_conf').is(":checked") ? video_conf = $('#video_conf').val() : video_conf = null;
-                    var audio = $('#audio').is(":checked") ? audio = $('#audio').val() : audio = null;
-                    var equipamento = $('#equipamento').is(":checked") ? equipamento = $('#equipamento').val() : equipamento = null;
-                    var relogio_ponto = $('#relogio_ponto').is(":checked") ? relogio_ponto = $('#relogio_ponto').val() : relogio_ponto = null;
-                    var erp = $('#erp').is(":checked") ? erp = $('#erp').val() : erp = null;
-                    var ups = $('#ups').is(":checked") ? ups = $('#ups').val() : ups = null;
-                    var servidor = $('#servidor').is(":checked") ? servidor = $('#servidor').val() : servidor = null;
-                    var switch_r = $('#switch').is(":checked") ? switch_r = $('#switch').val() : switch_r = null;
-                    var router = $('#router').is(":checked") ? router = $('#router').val() : router = null;
-                    var wifi = $('#wifi').is(":checked") ? wifi = $('#wifi').val() : wifi = null;
-                    var radio_comun = $('#radio_comun').is(":checked") ? radio_comun = $('#radio_comun').val() : radio_comun = null;
-                    var central_tel = $('#central_tel').is(":checked") ? central_tel = $('#central_tel').val() : central_tel = null;
-                    var coaxial = $('#coaxial').is(":checked") ? coaxial = $('#coaxial').val() : coaxial = null;
-                    var cobre = $('#cobre').is(":checked") ? cobre = $('#cobre').val() : cobre = null;
-                    var fibra_otica = $('#fibra_otica').is(":checked") ? fibra_otica = $('#fibra_otica').val() : fibra_otica = null;
-                    var bastidores = $('#bastidores').is(":checked") ? bastidores = $('#bastidores').val() : bastidores = null;
-                    var medidas_auto = $('#medidas_auto').is(":checked") ? medidas_auto = $('#medidas_auto').val() : medidas_auto = null;
-                    var portas_cf = $('#portas_cf').is(":checked") ? portas_cf = $('#portas_cf').val() : portas_cf = null;
-                    var compartimentacao = $('#compartimentacao').is(":checked") ? compartimentacao = $('#compartimentacao').val() : compartimentacao = null;
-                    var desenfumagem = $('#desenfumagem').is(":checked") ? desenfumagem = $('#desenfumagem').val() : desenfumagem = null;
-                    var extincao_agua = $('#extincao_agua').is(":checked") ? extincao_agua = $('#extincao_agua').val() : extincao_agua = null;
-                    var extincao_auto = $('#extincao_auto').is(":checked") ? extincao_auto = $('#extincao_auto').val() : extincao_auto = null;
-                    var sinalizacao_seg = $('#sinalizacao_seg').is(":checked") ? sinalizacao_seg = $('#sinalizacao_seg').val() : sinalizacao_seg = null;
-                    var extintores = $('#extintores').is(":checked") ? extintores = $('#extintores').val() : extintores = null;
-                    var sadg = $('#sadg').is(":checked") ? sadg = $('#sadg').val() : sadg = null;
-                    var sadir = $('#sadir').is(":checked") ? sadir = $('#sadir').val() : sadir = null;
-                    var sadi = $('#sadi').is(":checked") ? sadi = $('#sadi').val() : sadi = null;
-                    var cctv = $('#cctv').is(":checked") ? cctv = $('#cctv').val() : cctv = null;
-                    var controlo_acesso = $('#controlo_acesso').is(":checked") ? controlo_acesso = $('#controlo_acesso').val() : controlo_acesso = null;
-
-
+                  
+                  
+              },
+              
+              
+              //botao de submit
+                butaoSubmit: function(){
+                    var selected = [],
+                        cliente = $("#autocomplete-input").val();
+                    $('#accordion input:checked').each(function() {
+                        selected.push($(this).attr('value'));
+                    });
+                    
                     var dados = {
+                        id_cliente: cliente.substr(0, cliente.indexOf(' ')),
                         pedido_por: $("#pedidopor").val(),
                         prioridade: $("#prioridade").val(),
                         observacoes: $("#observacoes").val()
                     };
 
 
-                    if (!dados.pedido_por || !dados.prioridade || !dados.observacoes) {
+                    if (!dados.id_cliente || !dados.pedido_por || !dados.prioridade || !dados.observacoes) {
                         Materialize.toast('Preencha todos os campos!', 3000, 'rounded');
 
                     } else {
@@ -544,71 +478,179 @@ include 'configs/config.php'; //meta DB
                                     pedido_por: $("#pedidopor").val(),
                                     prioridade: $("#prioridade").val(),
                                     observacoes: $("#observacoes").val(),
-                                    mobiliario: mobiliario,
-                                    copia_imp: copia_imp,
-                                    video_proj: video_proj,
-                                    video_conf: video_conf,
-                                    audio: audio,
-                                    equipamento: equipamento,
-                                    relogio_ponto: relogio_ponto,
-                                    erp: erp,
-                                    ups: ups,
-                                    servidor: servidor,
-                                    switch_r: switch_r,
-                                    router: router,
-                                    wifi: wifi,
-                                    radio_comun: radio_comun,
-                                    central_tel: central_tel,
-                                    coaxial: coaxial,
-                                    cobre: cobre,
-                                    fibra_otica: fibra_otica,
-                                    bastidores: bastidores,
-                                    medidas_auto: medidas_auto,
-                                    portas_cf: portas_cf,
-                                    compartimentacao: compartimentacao,
-                                    desenfumagem: desenfumagem,
-                                    extincao_agua: extincao_agua,
-                                    extincao_auto: extincao_auto,
-                                    sinalizacao_seg: sinalizacao_seg,
-                                    extintores: extintores,
-                                    sadg: sadg,
-                                    sadir: sadir,
-                                    sadi: sadi,
-                                    cctv: cctv,
-                                    controlo_acesso: controlo_acesso
+                                    selecionados: selected
                                 };
-                                debugger;
+                        
                         $.ajax({
 
                             type: "POST",
                             data: data,
                             url: 'php/Levantamentos/insertLevant.php',
                             success: function (response) {
-                                debugger;
                                 var arr = $.parseJSON(response);
-
-                                var id_lastLevantamento = arr.id_levantamento;
-                                var id_cliente = arr.id_cliente;
-
-                                var ids_pdf = {
-                                    id_lastLevantamento: id_lastLevantamento,
-                                    id_cliente: id_cliente
-                                };
-
-                                window.open('http://localhost:82/1904/MetaConnect/php/levantamentos/levantamentopdf.php?a=' + id_lastLevantamento + '&b=' + id_cliente, '_blank');
-
-
-
-
+                                alert(arr.id_levantamento);
+                                window.open('http://localhost:82/1904/MetaConnect/php/levantamentos/pdfLevantamento.php?a=' + arr.id_levantamento, '_blank');
                             },
                             error: function () {
-                                alert("nao deu");
+                                alert(levantamento.MensagemErro);
                             }
                         });
                         $("#formId")[0].reset();
-
+                    }
+                    
+                },
+                
+                inputChange:function() {
+                    
+                   if ($('#proj_check:checkbox:checked').length>0) {
+                        $('#selectproj').toggle(this.checked);
+                        $('#BtnProj').toggle();
+                    } else {
+                        $('#selectproj').toggle();
+                        $('#BtnProj').toggle();
                     }
 
+                    levantamento.atualizaProjetos(); //chamamos a funcao de atualizar projetos
+
+                },
+                
+                botaoModal: function() {
+                      var dados_modal = {
+                        descricao: $("#descricao").val(),
+                        pessoa_responsavel: $("#pessoa_responsavel").val(),
+                        contacto_responsavel: $("#contacto_responsavel").val(),
+                        local: $("#local").val()
+                    };
+
+                    if (!dados_modal.descricao || !dados_modal.pessoa_responsavel || !dados_modal.contacto_responsavel || !dados_modal.local) {
+                        Materialize.toast('Preencha todos os campos!', 3000, 'rounded');
+                    } else {
+
+                        var cliente = $("#autocomplete-input").val(),
+                            info_modal = {
+                                id_cliente: cliente.substr(0, cliente.indexOf(' ')),
+                                descricao: $("#descricao").val(),
+                                pessoa_responsavel: $('#pessoa_responsavel').val(),
+                                contacto_responsavel: $('#contacto_responsavel').val(),
+                                local: $('#local').val()
+                            };
+                        
+                        $.ajax({
+                            type: "POST",
+                            data: info_modal,
+                            url: 'php/Projetos/insertProj_modal.php',
+                            success: function (response) {
+                                var state = $.parseJSON(response);
+
+                                if (state.success == true) {
+                                    Materialize.toast('Projeto criado com sucesso!', 3000, 'rounded');
+
+                                    levantamento.atualizaProjetos();
+
+                                } else {
+                                    Materialize.toast('Não foi possível criar projeto!', 3000, 'rounded');
+                                }
+                            },
+                            error: function () {
+                                alert(levantamento.MensagemErro);
+                            }
+                        });
+                    }
+                },
+                
+                botaoProjeto: function (){
+                    
+                    var valortextCliente = $("#autocomplete-input").val(),
+                        idcliente=valortextCliente.substr(0, valortextCliente.indexOf(' '));
+                   
+                    if (!idcliente) {
+                        Materialize.toast('Preencha corretamento o campo cliente!', 3000, 'rounded');
+                    } else {
+                        $('#modal1').modal('open');
+                    }
+                },
+                
+                
+                init:function (){
+                    
+                    $('select').material_select();
+                    $('#modal1').modal();
+                    $('#BtnProj').tooltip({delay: 50});
+                    $('.collapsible').collapsible();
+
+                
+                    $.ajax({
+                        url:"php/getClientes.php",
+                        dataType: "json",
+                        success: function (pData) {
+
+                            var jsonObj = {};
+
+                            for (var i=0; i< pData.length; i++){
+
+                                jsonObj[pData[i]["intCodigo"]+" - "+pData[i]["strNome"]] = null;
+                            }
+
+                            $('#autocomplete-input').autocomplete({
+                                data: jsonObj,
+                                limit: 5,
+                                 onAutocomplete: function(val) {
+                                     var id_cliente =val.substr(0,val.indexOf(' '));
+                                      
+                                       $.ajax({
+
+                                               type: "POST",
+                                               data: { id_cliente : id_cliente },
+                                               url:'php/getInfoCliente.php',
+                                                success: function (response) {
+                                                   
+                                                   var arr = $.parseJSON(response);
+                                                   $("#morada").val(arr[0].strMorada_lin1);
+                                                   $("#localidade").val(arr[0].strLocalidade);
+                                                   $("#cod_postal").val(arr[0].strPostal);
+                                                   $("#contribuinte").val(arr[0].strNumContrib);
+                                                   $("#telefone").val(arr[0].strTelefone);
+                                                   levantamento.atualizaProjetos();
+                                               },
+                                               error: function () {
+                                                  alert(levantamento.MensagemErro);
+                                               }
+                                       });
+
+                                }
+                            });
+                        }
+                    });
+
+                }
+                
+            };
+
+
+
+
+            $(document).ready(function () {
+
+        
+                levantamento.init();
+           
+
+                $('#BtnProj').click(function (){
+                    levantamento.botaoProjeto();
+                });
+
+                $('input[name=checkboxproj]:checkbox').change(function (e) {
+                    levantamento.inputChange(e);
+                });
+
+
+                $("#BtnModal").click(function () {
+                   levantamento.botaoModal();
+                });
+
+
+                $("#BtnAssist").click(function () {
+                   levantamento.butaoSubmit();
                 });
 
 

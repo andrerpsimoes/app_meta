@@ -1,24 +1,69 @@
 <?php
 
-include("restrito.php");
+/*
+  include("restrito.php");
 
-//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
-//iniciada, como ve que nao tem este e redirecionado para a pagina incial
+  //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+  //iniciada, como ve que nao tem este e redirecionado para a pagina incial
   if (isset($_GET['logout'])) {
-     session_destroy();
-     header("Refresh:0");
-  }
+  session_destroy();
+  header("Refresh:0");
+  } */
 
 
 require_once '../mpdf/mpdf.php';
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
 
-$html = '<!doctype html>
+$id_lastLevantamento = $_GET['a'];
+
+if ($id_lastLevantamento) { //caso exista
+
+
+    /*
+     * ********** Inicio Querys **************
+     */
+
+    $servicoDetails = $conn_meta->prepare("select s.data_hora, s.recebido_por, s.pedido_por, s.prioridade, s.observacoes, s.id_cliente, 
+(select id_projeto from projeto_cliente where is_active=1 and id=s.id_proj_cliente) as projeto
+from servico s
+where s.id=$id_lastLevantamento");
+
+
+    $servicoDetails->execute();
+    $servicoDetailsResult = $servicoDetails->fetch();
+
+    $id_cliente = $servicoDetailsResult[5];
+    $id_projeto = $servicoDetailsResult[6];
+
+    //tipos de prioridade existentes
+    if ($servicoDetailsResult[3] == 1) {
+        $prioridade = ' Baixa';
+    } elseif ($servicoDetailsResult[3] == 2) {
+        $prioridade = ' Média';
+    } elseif ($servicoDetailsResult[3] == 3) {
+        $prioridade = ' Alta';
+    }
+
+
+
+    $infoCliente = $conn_etica->prepare("select strNome, strMorada_lin1, strLocalidade, strPostal, strNumContrib, strTelefone from Tbl_Clientes where intCodigo = $id_cliente");
+    $infoCliente->execute();
+    $infoClienteResult = $infoCliente->fetch();
+
+    /*
+     * ********** Fim Querys **************
+     */
+
+
+
+
+
+    $html = '<!doctype html>
 <html>
     <head>
         <meta charset="utf-8">
-        <title>A simple, clean, and responsive HTML invoice template</title>
+        <title>PDF Levantamento</title>
 
 
         <style>
@@ -30,7 +75,7 @@ $html = '<!doctype html>
                 font-size: 16px;
                 line-height: 24px;
                 font-family: Helvetica Neue,Helvetica, Helvetica, Arial, sans-serif;
-                color: #555;
+                color: black;
             }
 
             .invoice-box table {
@@ -99,7 +144,7 @@ $html = '<!doctype html>
                 }
             }
 
-            /** RTL **/
+           
             .rtl {
                 direction: rtl;
                 font-family: Tahoma,Helvetica Neue, Helvetica, Helvetica, Arial, sans-serif;
@@ -129,8 +174,8 @@ $html = '<!doctype html>
 
                                 <td>
                                     Guia de Levantamento<br>
-                                    Levantamento #: 123<br>
-                                    Data: 14/11/2017<br>
+                                    Levantamento:' . $id_lastLevantamento . '<br>
+                                    Data:' . trim($servicoDetailsResult[0], ".000") . '<br>
 
                                 </td>
                             </tr>
@@ -158,95 +203,153 @@ $html = '<!doctype html>
                     </td>
                 </tr>
             </table>
-            <div class="cliente" style="background-color: #eee; color: black;font-weight: bold;">
+            <div class="cliente" style="background-color: #eee; color: black;font-weight: bold;margin-bottom: 10px;">
                 <label>Cliente</label>
-            </div>';
+            </div>
 
-            
-            $statement = $conn_etica->prepare("select strNome, strMorada_lin1, strLocalidade, strPostal, strNumContrib, strTelefone from Tbl_Clientes where intCodigo = 26");
-            $statement->execute();
-            $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-            //print_r($results);
-
-            foreach ($results as $result) {
-            $html.='
-            <div class="input-field" style="width: 100%;float: left;">
-                   <b>Nome: </b>' . $result["strNome"] . '<br>
+            <div class="row"> 
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
+                   <b>Nome: </b>' . $infoClienteResult[0] . '<br>
                 </div>
             
-                <div class="input-field" style="width: 75%;float: left;">
-                   <b>Morada: </b>' . $result["strMorada_lin1"] . '<br>
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
+                   <b>Morada: </b>' . $infoClienteResult[1] . '<br>
                 </div>
             
-                <div class="input-field" style="width: 25%;float: left;">
-                    <b>Localidade: </b>' . $result["strLocalidade"] . '<br>
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                    <b>Localidade: </b>' . $infoClienteResult[2] . '<br>
                 </div>
 
-                <div class="input-field" style="width: 50%;float: left;">
-                    <b>Código-Postal: </b>' . $result["strPostal"] . '<br>
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                    <b>Código-Postal: </b>' . $infoClienteResult[3] . '<br>
                 </div>
 
-                <div class="input-field" style="width: 50%;float: left;">
-                    <b>Telefone: </b>' . $result["strTelefone"] . '<br>
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                    <b>Telefone: </b>' . $infoClienteResult[4] . '<br>
                 </div>
             
-                <div class="input-field" style="width: 50%;float: left;">
-                   <b>Contribuinte: </b>' . $result["strNumContrib"] . '<br>
-                </div><p>
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                   <b>Contribuinte: </b>' . $infoClienteResult[5] . '<br>
+                </div>
                 
-            <div class="levantamento" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;">
+            </div>
+
+            <br>
+            <div class="Levantamento" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;margin-bottom: 10px;">
                 <label>Levantamento</label>
-            </div>' ;
-            
-            } 
-            
+            </div>
 
-
-            $statement = $conn_meta->prepare("select recebido_pessoa, prioridade, zona, local, contato_responsavel, observacoes from levantamento where id = 19");
-                $statement->execute();
-                $results_meta = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-            //print_r($results);
-
-            foreach ($results_meta as $result) {
-            $html.='
-            <div class="input-field" style="width: 50%;float: left;">
-                   <b>Recebido por: </b>' . $result["recebido_pessoa"] . '<br>
-                </div>
-            
-                <div class="input-field" style="width: 50%;float: left;">
-                   <b>Prioridade: </b>' . $result["prioridade"] . '<br>
-                </div>
-            
-                <div class="input-field" style="width: 100%;float: left;">
-                    <b>Área: </b> area<br>
-                </div>
-
-                <div class="input-field" style="width: 50%;float: left;">
-                    <b>Zona: </b>' . $result["zona"] . '<br>
-                </div>
-
-                <div class="input-field" style="width: 50%;float: left;">
-                    <b>Local: </b>' . $result["local"] . '<br>
-                </div>
-            
-                <div class="input-field" style="width: 100%;float: left;">
-                   <b>Contacto Responsável: </b>' . $result["contato_responsavel"] . '<br>
+            <div class="row">
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
+                   <b>Recebido por: </b>' . $servicoDetailsResult[1] . '<br>
                 </div>
                 
-                <div class="input-field" style="width: 100%;float: left;">
-                    <b>Observações: </b>' . $result["observacoes"] . '<br>
-                </div>' ;
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                   <b>Pedido por: </b>' . $servicoDetailsResult[2] . '<br>
+                </div>
             
-            } 
-          $html.='
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                   <b>Prioridade: </b>' . $prioridade . ' <br>
+                </div>';
+
+
+
+
+
+    $stat = $conn_meta->prepare("select la.id_area, a.descricao, (select descricao from area where id=a.id_parent) as pai from servico_area as la, area as a where la.id_servico=$id_lastLevantamento and a.id= la.id_area and la.is_active=1");
+    $stat->execute();
+    $results_meta = $stat->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+    if ($results_meta) {
+
+        $html .= ' 
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
+                    <b>Área(s): </b>';
+        $seg_ele = array();
+        $seg_inc = array();
+        $telecom = array();
+        $redes = array();
+        $infor = array();
+        $audiovisuais = array();
+        $equi_esc = array();
+        foreach ($results_meta as $area) {
+            if ($area['pai'] == 'Segurança Eletrónica') {
+                $seg_ele[] = $area['descricao'];
+            }
+            if ($area['pai'] == 'SCIE') {
+                $seg_inc[] = $area['descricao'];
+            }
+            if ($area['pai'] == 'Telecomunicações') {
+                $telecom[] = $area['descricao'];
+            }
+
+            if ($area['pai'] == 'Redes') {
+                $redes[] = $area['descricao'];
+            }
+            if ($area['pai'] == 'Informática') {
+                $infor[] = $area['descricao'];
+            }
+            if ($area['pai'] == 'AudioVisuais') {
+                $audiovisuais[] = $area['descricao'];
+            }
+            if ($area['pai'] == 'Equipamento Escritório') {
+                $equi_esc[] = $area['descricao'];
+            }
+        }
+        $html .= !empty($seg_ele) ? "<br><b><i>Segurança Eletrónica: </i></b>" . implode(", ", $seg_ele) . "<br>" : NULL;
+        $html .= !empty($seg_inc) ? "<br><b><i>Segurança contra Incêndios: </i></b>" . implode(", ", $seg_inc) . "<br>" : NULL;
+        $html .= !empty($telecom) ? "<br><b><i>Telecomunicações: </i></b>" . implode(", ", $telecom) . "<br>" : NULL;
+        $html .= !empty($redes) ? "<br><b><i>Redes: </i></b>" . implode(", ", $redes) . "<br>" : NULL;
+        $html .= !empty($infor) ? "<br><b><i>Informática: </i></b>" . implode(", ", $infor) . "<br>" : NULL;
+        $html .= !empty($audiovisuais) ? "<br><b><i>AudioVisuais: </i></b>" . implode(", ", $audiovisuais) . "<br>" : NULL;
+        $html .= !empty($equi_esc) ? "<br><b><i>Equipamento Escritório: </i></b>" . implode(", ", $equi_esc) . "<br>" : NULL;
+        $html .= ' </div>';
+    }
+
+
+    $html .= '<div class="input-field" style="width: 100%;float: left;margin-bottom: 10px;">
+                   <b>Observações: </b>' . $servicoDetailsResult[4] . '
+                </div>';
+
+
+
+
+
+    if ($id_projeto) { //caso nao haja projeto
+        $sql_proj = $conn_meta->prepare("select descricao, responsavel, contacto_responsavel, local from projeto where id=$id_projeto and is_active=1");
+        $sql_proj->execute();
+        $sql_projResult = $sql_proj->fetch();
+
+        $descricao = $sql_projResult[0];
+        $responsavel = $sql_projResult[1];
+        $contacto_responsavel = $sql_projResult[2];
+        $local = $sql_projResult[3];
+
+        $html .= '<div class="input-field" style="width: 100%;float: left;margin-bottom: 40px;">
+                <div class="pro" style="width: auto;height: 100px;padding: 2px;border: 2px solid black;">
+                    <h3 style="margin-top:2px;margin-bottom: 10px;">Projeto</h3>
+                    <div class="descricao" style="width: 100%;float: left;margin-bottom: 1px;" ><i><b>Descricao: </b></i>' . $descricao . '</div>'
+                . '<div  style="width: 100%;float: left;margin-bottom: 1px;" ><i><b>Responsável: </b></i>' . $responsavel . '</div>'
+                . '<div  style="width: 60%;float: left;margin-bottom: 1px;" ><i><b>Contacto Responsável: </b></i>' . $contacto_responsavel . '</div>'
+                . '<div style="width: 30%;float: left;margin-bottom: 1px;"><i><b>Local: </b></i>' . $local . '</div>'
+                . '</div></div>';
+    }    //fim caso nao haja projeto
+
+    $html .= '
+            </div>
+
+        </div>
+
     </body>
-</html>
-';
+</html>';
 
-$mpdf = new mPDF('c','A4');
-$mpdf->writeHTML($html);
-$mpdf->Output('pdfLevantamento.pdf', 'I');
-
+    $mpdf = new mPDF('c', 'A4');
+    $mpdf->writeHTML($html);
+    $mpdf->Output('pdfLevantamento.pdf', 'I');
+} else {
+    echo 'Error 404';
+}
 ?>

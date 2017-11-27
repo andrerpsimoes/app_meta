@@ -1,13 +1,13 @@
 <?php
 /*
-include("restrito.php");
+  include("restrito.php");
 
-//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
-//iniciada, como ve que nao tem este e redirecionado para a pagina incial
+  //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+  //iniciada, como ve que nao tem este e redirecionado para a pagina incial
   if (isset($_GET['logout'])) {
-     session_destroy();
-     header("Refresh:0");
-  }*/
+  session_destroy();
+  header("Refresh:0");
+  } */
 
 include '../../configs/config2.php'; // eticadata DB
 include '../../configs/config.php'; //meta DB
@@ -15,6 +15,7 @@ include '../../configs/config.php'; //meta DB
 
 $id_cliente = $_GET['b'];
 $id_lastLevantamento = $_GET['a'];
+$id_projeto = $_GET['c'];
 
 //echo $id_cliente;
 //echo $id_lastLevantamento;
@@ -36,7 +37,7 @@ $id_lastLevantamento = $_GET['a'];
                 font-size: 16px;
                 line-height: 24px;
                 font-family: Helvetica Neue,Helvetica, Helvetica, Arial, sans-serif;
-                color: #555;
+                color: black;
             }
 
             .invoice-box table {
@@ -173,7 +174,7 @@ $id_lastLevantamento = $_GET['a'];
                     </td>
                 </tr>
             </table>
-            <div class="cliente" style="background-color: #eee; color: black;font-weight: bold;">
+            <div class="cliente" style="background-color: #eee; color: black;font-weight: bold;margin-bottom: 10px;">
                 <label>Cliente</label>
             </div>
 
@@ -190,27 +191,27 @@ $id_lastLevantamento = $_GET['a'];
 
 
                     echo '  
-                <div class="input-field" style="width: 100%;float: left;">
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
                    <b>Nome: </b>' . $result["strNome"] . '<br>
                 </div>
             
-                <div class="input-field" style="width: 75%;float: left;">
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
                    <b>Morada: </b>' . $result["strMorada_lin1"] . '<br>
                 </div>
             
-                <div class="input-field" style="width: 25%;float: left;">
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
                     <b>Localidade: </b>' . $result["strLocalidade"] . '<br>
                 </div>
 
-                <div class="input-field" style="width: 50%;float: left;">
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
                     <b>Código-Postal: </b>' . $result["strPostal"] . '<br>
                 </div>
 
-                <div class="input-field" style="width: 50%;float: left;">
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
                     <b>Telefone: </b>' . $result["strTelefone"] . '<br>
                 </div>
             
-                <div class="input-field" style="width: 100%;float: left;">
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
                    <b>Contribuinte: </b>' . $result["strNumContrib"] . '<br>
                 </div>';
                 }
@@ -218,7 +219,7 @@ $id_lastLevantamento = $_GET['a'];
             </div>
 
             <br>
-            <div class="Levantamento" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;">
+            <div class="Levantamento" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;margin-bottom: 10px;">
                 <label>Levantamento</label>
             </div>
 
@@ -234,11 +235,15 @@ $id_lastLevantamento = $_GET['a'];
 
 
                     echo '
-                <div class="input-field" style="width: 50%;float: left;">
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
                    <b>Recebido por: </b>' . $result["recebido_por"] . '<br>
                 </div>
+                
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                   <b>Pedido por: </b>' . $result["pedido_por"] . '<br>
+                </div>
             
-                <div class="input-field" style="width: 50%;float: left;">
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
                    <b>Prioridade: </b>';
                     if ($result['prioridade'] == 1) {
                         echo 'Baixa';
@@ -251,28 +256,76 @@ $id_lastLevantamento = $_GET['a'];
                     $stat = $conn_meta->prepare("select la.id_area, a.descricao, (select descricao from area where id=a.id_parent) as pai from servico_area as la, area as a where la.id_servico=$id_lastLevantamento and a.id= la.id_area and la.is_active=1");
                     $stat->execute();
                     $results_meta = $stat->fetchAll(PDO::FETCH_ASSOC);
-                    
-                    echo "<br><br><br><br><br><pre>";
-                    print_r($results_meta);
-                    echo "</pre>";
-                    
-                    echo '
-                <div class="input-field" style="width: 100%;float: left;">
-                    <b>Área(s): </b>';
-                    $result_area = array();
-                    foreach ($results_meta as $area) {
-                        $result_area[] = $area['descricao'];
-                        
-                    }
-                    echo implode(", ", $result_area);
-                    
 
-                    echo '<br>
+                    echo '
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
+                    <b>Área(s): </b>';
+                    $seg_ele = array();
+                    $seg_inc = array();
+                    $telecom = array();
+                    $redes = array();
+                    $infor = array();
+                    $audiovisuais = array();
+                    $equi_esc = array();
+                    foreach ($results_meta as $area) {
+                        if ($area['pai'] == 'Segurança Eletrónica') {
+                            $seg_ele[] = $area['descricao'];
+                        }
+                        if ($area['pai'] == 'SCIE') {
+                            $seg_inc[] = $area['descricao'];
+                        }
+                        if ($area['pai'] == 'Telecomunicações') {
+                            $telecom[] = $area['descricao'];
+                        }
+
+                        if ($area['pai'] == 'Redes') {
+                            $redes[] = $area['descricao'];
+                        }
+                        if ($area['pai'] == 'Informática') {
+                            $infor[] = $area['descricao'];
+                        }
+                        if ($area['pai'] == 'AudioVisuais') {
+                            $audiovisuais[] = $area['descricao'];
+                        }
+                        if ($area['pai'] == 'Equipamento Escritório') {
+                            $equi_esc[] = $area['descricao'];
+                        }
+                    }
+                    echo!empty($seg_ele) ? "<i>Segurança Eletrónica=> </i>" . implode(", ", $seg_ele) . "<br>" : NULL;
+                    echo!empty($seg_inc) ? "<i>Segurança contra Incêndios: </i>" . implode(", ", $seg_inc) . "<br>" : NULL;
+                    echo!empty($telecom) ? "<i>Telecomunicações: </i>" . implode(", ", $telecom) . "<br>" : NULL;
+                    echo!empty($redes) ? "<i>Redes: </i>" . implode(", ", $redes) . "<br>" : NULL;
+                    echo!empty($infor) ? "<i>Informática: </i>" . implode(", ", $infor) . "<br>" : NULL;
+                    echo!empty($audiovisuais) ? "<i>AudioVisuais: </i>" . implode(", ", $audiovisuais) . "<br>" : NULL;
+                    echo!empty($equi_esc) ? "<i>Equipamento Escritório: </i>" . implode(", ", $equi_esc) . "<br>" : NULL;
+                    echo '
                     </div>
             
-                <div class="input-field" style="width: 100%;float: left;">
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
                    <b>Observações: </b>' . $result["observacoes"] . '<br>
                 </div>';
+                    $sql_proj = $conn_meta->prepare("select descricao, responsavel, contacto_responsavel, local from projeto where id=$id_projeto and is_active=1");
+                    $sql_proj->execute();
+                    $results_projeto = $sql_proj->fetchAll(PDO::FETCH_ASSOC);
+                    echo '
+                    
+                <div class="input-field" style="width: 100%;float: left;margin-bottom: 40px;">
+                <div class="pro" style="width: auto;height: 100px;padding: 3px;border: 1px solid black;">
+                    <b>Projeto </b><br>';
+
+                    foreach ($results_projeto as $projeto) {
+                        echo '<div class="descricao" style="width: 100%;float: left;margin-bottom: 1px;" >';echo "<i>Descricao: </i>" . $projeto['descricao'] ;
+                        echo'</div>
+                        <div class="responsavel" style="width: 100%;float: left;margin-bottom: 1px;" >';echo "<i>Responsável: </i>" . $projeto['responsavel'] ;
+                        echo'</div>
+                        <div class="responsavel" style="width: 60%;float: left;margin-bottom: 1px;" >';echo "<i>Contacto Responsável: </i>" . $projeto['contacto_responsavel'] ;
+                        echo'</div>
+                        <div class="responsavel" style="width: 30%;float: left;margin-bottom: 1px;" >';echo "<i>Local: </i>" . $projeto['local'] ;
+                        echo'</div>
+
+                     ';
+                    }
+                    echo '</div></div>';
                 }
                 ?>
             </div>
