@@ -37,6 +37,28 @@
                     </a>
                 </li>
                 <li class="bold">
+                    <a class="collapsible-header waves-effect waves-cyan">
+                        <i class="material-icons">assistant</i>
+                        <span class="nav-text">Gestão de Serviços</span>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li class="bold">
+                                <a href="levantamento.php">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span>Gestão de Levantamento</span>
+                                </a>
+                            </li>
+                            <li class="bold">
+                                <a href="gestaoAssistencias.php">
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                    <span>Gestão de Assistência</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="bold">
                     <a href="#" class="waves-effect waves-cyan">
                         <i class="material-icons">mail_outline</i>
                         <span class="nav-text">Mailbox</span>

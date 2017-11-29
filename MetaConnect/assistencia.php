@@ -626,10 +626,8 @@ include 'configs/config.php'; //meta DB
 
             $(document).ready(function () {
 
-        
                 assistencia.init();
            
-
                 $('#BtnProj').click(function (){
                     assistencia.botaoProjeto();
                 });
@@ -638,22 +636,14 @@ include 'configs/config.php'; //meta DB
                     assistencia.inputChange(e);
                 });
 
-
                 $("#BtnModal").click(function () {
                    assistencia.botaoModal();
                 });
 
-
                 $("#BtnAssist").click(function () {
                    assistencia.butaoSubmit();
                 });
-
-
-
-
             });
-            
         </script>
-
     </body>
 </html>

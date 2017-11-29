@@ -33,6 +33,10 @@ where s.id=$id_lastAssistencia");
     $servicoDetails->execute();
     $servicoDetailsResult = $servicoDetails->fetch();
 
+    $datetimeFromSql = $servicoDetailsResult[0];
+    $time = strtotime($datetimeFromSql);
+    $myFormatForView = date("d/m/Y H:i:s", $time);
+
     $id_cliente = $servicoDetailsResult[5];
     $id_projeto = $servicoDetailsResult[6];
     $id_counter = $servicoDetailsResult[7];
@@ -176,7 +180,7 @@ where s.id=$id_lastAssistencia");
                                 <td>
                                     Guia de Assistência<br>
                                     Assistência: ' . date("Y") . '/' . $id_counter . '<br>
-                                    Data: ' . trim($servicoDetailsResult[0], ".000") . '<br>
+                                    Data: ' . $myFormatForView . '<br>
 
                                 </td>
                             </tr>
@@ -351,6 +355,6 @@ where s.id=$id_lastAssistencia");
     $mpdf->writeHTML($html);
     $mpdf->Output('pdfAssistencia.pdf', 'I');
 } else {
-    echo 'Error 404';
+    header("Location:../../page-404.php");
 }
 ?>
