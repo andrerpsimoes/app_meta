@@ -1,6 +1,5 @@
 <?php
 
-/*
   include("restrito.php");
 
   //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
@@ -8,7 +7,7 @@
   if (isset($_GET['logout'])) {
   session_destroy();
   header("Refresh:0");
-  } */
+  } 
 
 
 require_once '../mpdf/mpdf.php';
@@ -17,9 +16,7 @@ include '../../configs/config2.php'; // eticadata DB
 
 $id_lastLevantamento = $_GET['a'];
 
-if ($id_lastLevantamento) { //caso exista
-
-
+try{
     /*
      * ********** Inicio Querys **************
      */
@@ -354,7 +351,8 @@ where s.id=$id_lastLevantamento");
     $mpdf = new mPDF('c', 'A4');
     $mpdf->writeHTML($html);
     $mpdf->Output('pdfLevantamento.pdf', 'I');
-} else {
+} catch (Exception $ex) {
     header("Location:../../page-404.php");
 }
+    
 ?>

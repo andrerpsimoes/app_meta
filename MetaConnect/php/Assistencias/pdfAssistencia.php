@@ -19,7 +19,8 @@ $id_lastAssistencia = $_GET['a'];
 
 if ($id_lastAssistencia) { //caso exista
 
-
+    
+    
     /*
      * ********** Inicio Querys **************
      */
@@ -56,6 +57,9 @@ where s.id=$id_lastAssistencia");
     $infoCliente->execute();
     $infoClienteResult = $infoCliente->fetch();
 
+    
+    $morada = $infoClienteResult[2];
+    
     /*
      * ********** Fim Querys **************
      */
@@ -341,7 +345,45 @@ where s.id=$id_lastAssistencia");
                 . '<div  style="width: 60%;float: left;margin-bottom: 1px;" ><i><b>Contacto Responsável: </b></i>' . $contacto_responsavel . '</div>'
                 . '<div style="width: 30%;float: left;margin-bottom: 1px;"><i><b>Local: </b></i>' . $local . '</div>'
                 . '</div></div>';
+        
+        $morada = $local;
+        
     }    //fim caso nao haja projeto
+    
+    try {
+        //$url="https://maps.googleapis.com/maps/api/directions/json?origin='Arruamento D Lote 36, 3854-909 Albergaria-a-Velha'&destination='$morada'&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAyJgb1BrQuegtg";
+        
+        $url= "https://maps.googleapis.com/maps/api/directions/json?origin=%27Arruamento%20D%20Lote%2036,%203854-909%20Albergaria-aVelha%27&destination=".urlencode($morada)."&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAyJgb1BrQuegtg";
+        
+        //$url= "https://maps.googleapis.com/maps/api/directions/json?origin=%27Arruamento%20D%20Lote%2036,%203854-909%20Albergaria-aVelha%27&destination=%27Oliveirinha%27&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAy%20Jgb1BrQuegtg";
+      
+
+        $res= file_get_contents($url);
+
+
+
+        $json=json_decode($res);
+
+       $html.= '  <br> <div class="Assistencia" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;margin-bottom: 10px;">
+                       <label>Informações Sobre a Viagem</label>
+                   </div>
+            <b>Local Partida: </b> Metaveiro <br>
+            <b>Local Chegada:</b> '.$morada.'<br><br>
+                  
+                   
+           <b>Distância: </b>'.$json->routes[0]->legs[0]->distance->text.'<br>'
+        . '<b>Duração:</b> '.$json->routes[0]->legs[0]->duration->text;
+
+        
+    } catch (Exception $exc) {
+        echo $exc->getTraceAsString();
+    }
+
+
+
+
+
+
 
     $html .= '
             </div>

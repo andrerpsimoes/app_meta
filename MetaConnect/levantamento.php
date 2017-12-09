@@ -116,14 +116,17 @@ include 'configs/config.php'; //meta DB
                                                 Sim
                                             </label>
                                         </div>
-                                        <div class="col s4">
-                                            <div class="form-select" id="selectproj" style="display: none;">
+                                        
+                                        <div id="divselectproj" style="display: none;">
+                                            <div class="col s4">
+                                                <div class="form-select" id="selectproj" >
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col s4">
-                                            <a class="btn-floating waves-effect waves-light tooltipped" data-position="bottom" data-delay="5" data-tooltip="Criar Projeto" id="BtnProj" style="display: none;">
-                                                <i class="material-icons">add</i></a>
+                                            <div class="col s4">
+                                                <a class="btn-floating waves-effect waves-light tooltipped" data-position="bottom" data-delay="5" data-tooltip="Criar Projeto" id="BtnProj">
+                                                    <i class="material-icons">add</i></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -448,8 +451,6 @@ include 'configs/config.php'; //meta DB
                   
                   
               },
-              
-              
               //botao de submit
                 butaoSubmit: function(){
                     var selected = [],
@@ -480,13 +481,12 @@ include 'configs/config.php'; //meta DB
                                     observacoes: $("#observacoes").val(),
                                     selecionados: selected
                                 };
-                        
                         $.ajax({
-
                             type: "POST",
                             data: data,
                             url: 'php/Levantamentos/insertLevant.php',
                             success: function (response) {
+                                debugger;
                                 var arr = $.parseJSON(response);
                                 window.open('http://localhost:82/1904/MetaConnect/php/levantamentos/pdfLevantamento.php?a=' + arr.id_levantamento, '_blank');
                             },
@@ -494,19 +494,23 @@ include 'configs/config.php'; //meta DB
                                 alert(levantamento.MensagemErro);
                             }
                         });
+                        
                         $("#formId")[0].reset();
+                        if ($('#proj_check:checkbox:checked').length>0) {
+                            $('#divselectproj').show();
+                        } else {
+                           $('#divselectproj').hide();
+                        }
+
                     }
-                    
                 },
                 
                 inputChange:function() {
                     
                    if ($('#proj_check:checkbox:checked').length>0) {
-                        $('#selectproj').toggle(this.checked);
-                        $('#BtnProj').toggle();
+                       $('#divselectproj').show();
                     } else {
-                        $('#selectproj').toggle();
-                        $('#BtnProj').toggle();
+                       $('#divselectproj').hide();
                     }
 
                     levantamento.atualizaProjetos(); //chamamos a funcao de atualizar projetos

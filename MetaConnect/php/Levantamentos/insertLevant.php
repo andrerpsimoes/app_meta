@@ -23,7 +23,7 @@ if (isset($_POST['id_projeto'])) {
 
     //insert tab servico um levantamento
     $statement = $conn_meta->prepare("INSERT INTO servico(id_cliente, recebido_por, pedido_por, data_hora, observacoes, prioridade, tipo_servico, id_proj_cliente, estado, is_active)"
-            . " VALUES ($id_cliente, 'teste','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, $id_proj_cli, 1, 1)");
+            . " VALUES ($id_cliente, '".$_SESSION['nome']."','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, $id_proj_cli, 1, 1)");
 
     $statement->execute();
 
@@ -31,7 +31,7 @@ if (isset($_POST['id_projeto'])) {
 } else {
     //insert tab servico um levantamento
     $statement = $conn_meta->prepare("INSERT INTO servico(id_cliente, recebido_por, pedido_por, data_hora, observacoes, prioridade, tipo_servico, id_proj_cliente, estado, is_active)"
-            . " VALUES ($id_cliente, 'teste','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, NULL, 1, 1)");
+            . " VALUES ($id_cliente, '".$_SESSION['nome']."','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, NULL, 1, 1)");
 
     $statement->execute();
 
