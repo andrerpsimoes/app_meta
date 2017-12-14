@@ -40,7 +40,7 @@ include 'configs/config.php'; //meta DB
 
         <!-- Modal Eliminar -->
         <div id="delete_modal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content" id="content_delete">
                 <h4>Eliminar Assistência</h4>
                 <p>Tem a certeza que pretende eliminar esta assistência?</p>
             </div>
@@ -52,7 +52,7 @@ include 'configs/config.php'; //meta DB
 
         <!-- Modal Editar -->
         <div id="edit_modal" class="modal" style="width: 80%; height: 80%;">
-            <div class="modal-content">
+            <div class="modal-content" id="content_edit">
 
             </div>
             <div class="modal-footer">
@@ -60,6 +60,29 @@ include 'configs/config.php'; //meta DB
                 <a class="modal-action modal-close waves-effect waves-green btn-flat" id="guardarButton">Guardar</a>
             </div>
         </div>
+
+        <!-- Modal Info -->
+        <div id="info_modal" class="modal" style="width: 80%; height: 80%;">
+            <div class="modal-content" id="content_info">
+
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" id="cancelarButton">Cancelar</a>
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" id="guardarInfoButton">Guardar</a>
+            </div>
+        </div>
+
+        <!-- Modal Atribuir Servico -->
+        <div id="assign_modal" class="modal" style="width: 80%; max-height: 100%;">
+            <div class="modal-content" id="content_assign">
+
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" id="cancelarButton">Cancelar</a>
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" id="guardarAssignButton">Guardar</a>
+            </div>
+        </div>
+
 
         <?php include 'php/infogeral/footer.php'; ?>
 
@@ -86,7 +109,7 @@ include 'configs/config.php'; //meta DB
                         data: {id_servico: gestaoAssistencia.idservico},
                         url: 'php/Assistencias/modaleditAssist.php',
                         success: function (response) {
-                            $('.modal-content').html(response);
+                            $('#content_edit').html(response);
                         },
                         error: function () {
                             alert(gestaoAssistencia.MensagemErro);
@@ -95,13 +118,43 @@ include 'configs/config.php'; //meta DB
                     $('#edit_modal').modal('open');
                 },
 
+                guardarModalEdit: function () {
+
+                    data_to_edit = {
+                        id_servico: gestaoAssistencia.idservico,
+                        prioridade: $("#edit_modal #prioridade").val(),
+                        observacoes: $("#edit_modal #observacoes").val()
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        data: data_to_edit,
+                        url: 'php/Assistencias/editAssistencia.php',
+                        success: function (response) {
+                            $.ajax({
+                                url: 'php/Assistencias/tableAssist.php',
+                                success: function (response) {
+                                    debugger;
+                                    $('#tableContainer').html(response);
+                                    Materialize.toast('Assistência editada com sucesso!', 3000, 'rounded');
+                                },
+                                error: function () {
+                                    alert(gestaoAssistencia.MensagemErro);
+                                }
+                            });
+                        },
+                        error: function () {
+                            alert(assistencia.MensagemErro);
+                        }
+                    });
+                },
+
                 deleteButton: function (del_this) {
                     gestaoAssistencia.idservico = del_this.closest('tr').attr('id');
                     $('#delete_modal').modal('open');
                 },
 
                 simModal: function () {
-                    debugger;
                     $.ajax({
                         type: "POST",
                         data: {id_servico: gestaoAssistencia.idservico},
@@ -128,6 +181,66 @@ include 'configs/config.php'; //meta DB
                 cancelarModal: function () {
                     $('#delete_modal').modal('close');
                     $('#edit_modal').modal('close');
+                    $('#info_modal').modal('close');
+                    $('#assign_modal').modal('close');
+                },
+
+                infoButton: function (info_this) {
+                    gestaoAssistencia.idservico = info_this.closest('tr').attr('id');
+
+                    $.ajax({
+                        type: "POST",
+                        data: {id_servico: gestaoAssistencia.idservico},
+                        url: 'php/Assistencias/infoModalAssist.php',
+                        success: function (response) {
+                            $('#content_info').html(response);
+                        },
+                        error: function () {
+                            alert(gestaoAssistencia.MensagemErro);
+                        }
+                    });
+                    $('#info_modal').modal('open');
+                },
+
+                atribuirServico: function (id_this) {
+                    gestaoAssistencia.idservico = id_this.closest('tr').attr('id');
+
+                    $.ajax({
+                        type: "POST",
+                        data: {id_servico: gestaoAssistencia.idservico},
+                        url: 'php/Assistencias/assignModalAssist.php',
+                        success: function (response) {
+                            $('#content_assign').html(response);
+                        },
+                        error: function () {
+                            alert(gestaoAssistencia.MensagemErro);
+                        }
+                    });
+                    $('#assign_modal').modal('open');
+                },
+
+                guardarModalAssign: function () {
+                    var selected = [];
+                    $('#assign_modal #tecnicos option:checked').each(function () {
+                        selected.push($(this).attr('value'));
+                    });
+
+                    dados_serv_tec = {
+                        id_servico: gestaoAssistencia.idservico,
+                        tecnicos_selecionados: selected
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        data: dados_serv_tec,
+                        url: 'php/Assistencias/insertTecnicoAssist.php',
+                        success: function (response) {
+                            Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
+                        },
+                        error: function () {
+                            alert(gestaoAssistencia.MensagemErro);
+                        }
+                    });
                 },
 
                 init: function () {
@@ -152,7 +265,7 @@ include 'configs/config.php'; //meta DB
 
                 gestaoAssistencia.init();
 
-                $(document).on("click", "button[name='BtnEdit']", function () {
+                $(document).on("click", "a[name='BtnEdit']", function () {
                     var this_row = $(this);
                     gestaoAssistencia.editButton(this_row);
                 });
@@ -162,6 +275,10 @@ include 'configs/config.php'; //meta DB
                     gestaoAssistencia.deleteButton(del_this);
                 });
 
+                $("#guardarButton").click(function () {
+                    gestaoAssistencia.guardarModalEdit();
+                });
+
                 $("#simButton").click(function () {
                     gestaoAssistencia.simModal();
                 });
@@ -169,6 +286,30 @@ include 'configs/config.php'; //meta DB
                 $("#cancelarButton").click(function () {
                     gestaoAssistencia.cancelarModal();
                 });
+
+                $("#guardarAssignButton").click(function () {
+                    gestaoAssistencia.guardarModalAssign();
+                });
+
+                $(document).on("click", "a[name='BtnInfo']", function () {
+                    var info_this = $(this);
+                    gestaoAssistencia.infoButton(info_this);
+                });
+
+                $(document).on("click", "td:first-child", function () {
+                    var id_this = $(this);
+                    gestaoAssistencia.atribuirServico(id_this);
+                });
+
+
+
+
+                /*$("#tableContainer").mouseover(function () {
+                 $("#counter").css("background-color", "blue");
+                 }).mouseout(function () {
+                 $("#counter").css("background-color", "");
+                 });*/
+
             });
 
         </script>

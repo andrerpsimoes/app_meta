@@ -351,12 +351,10 @@ where s.id=$id_lastAssistencia");
     }    //fim caso nao haja projeto
     
     try {
-        //$url="https://maps.googleapis.com/maps/api/directions/json?origin='Arruamento D Lote 36, 3854-909 Albergaria-a-Velha'&destination='$morada'&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAyJgb1BrQuegtg";
         
         $url= "https://maps.googleapis.com/maps/api/directions/json?origin=%27Arruamento%20D%20Lote%2036,%203854-909%20Albergaria-aVelha%27&destination=".urlencode($morada)."&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAyJgb1BrQuegtg";
         
-        //$url= "https://maps.googleapis.com/maps/api/directions/json?origin=%27Arruamento%20D%20Lote%2036,%203854-909%20Albergaria-aVelha%27&destination=%27Oliveirinha%27&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAy%20Jgb1BrQuegtg";
-      
+
 
         $res= file_get_contents($url);
 
@@ -378,12 +376,6 @@ where s.id=$id_lastAssistencia");
     } catch (Exception $exc) {
         echo $exc->getTraceAsString();
     }
-
-
-
-
-
-
 
     $html .= '
             </div>

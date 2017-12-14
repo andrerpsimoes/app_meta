@@ -38,7 +38,7 @@ $statement->execute();
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($results as $result) {
     $tableAssist .= '<tr id="' . $result["id"] . '">
-                    <td class="counter" name="counter">' . $result["counter"] . '</td>
+                    <td class="counter" name="counter" id="counter" style="cursor:pointer;">' . $result["counter"] . '</td>
                     <td width="300px;">';
     $result["id_cliente"];
     $sql_cliente = $conn_etica->prepare("select intCodigo, strNome from Tbl_Clientes where intCodigo ='" . $result['id_cliente'] . "'");
@@ -77,8 +77,9 @@ foreach ($results as $result) {
     $myFormatForView = date("d/m/Y H:i:s", $time);
     $tableAssist .= $myFormatForView;
     $tableAssist .= '</td>
+                     <td><a class=" tooltipped" data-position="bottom" data-delay="50" data-tooltip="Informação" name="BtnInfo" id="BtnInfo" style="cursor:pointer;"><img src="images/info.png" alt="" width="24" height="24" border="0"></a></td>
                      <td><a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Ver PDF" target="_blank" href="php/assistencias/pdfAssistencia.php?a=' . $result['id'] . '" id="Btnpdf"><img src="images/pdf_icon.png" alt="" width="40" height="40" border="0"></a></td>
-                     <td><button class="btn-floating waves-effect waves-light yellow darken-3 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Editar" name="BtnEdit" id="BtnEdit" value=""><i class="material-icons">mode_edit</i></button></td>
+                     <td><a class="btn-floating waves-effect waves-light yellow darken-3 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Editar" name="BtnEdit" id="BtnEdit" value=""><i class="material-icons">mode_edit</i></a></td>
                      <td><a class="btn-floating waves-effect waves-light deep-orange accent-3 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Eliminar" name="BtnDelete" id="BtnDelete" value=""><i class="material-icons">delete_forever
                      </i></a></td>
                      </tr>';
