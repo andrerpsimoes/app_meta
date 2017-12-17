@@ -315,11 +315,11 @@ include 'configs/config.php'; //meta DB
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row" style="margin-bottom: 30px;">
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">textsms</i>
-                                        <textarea id="observacoes" class="materialize-textarea" maxlength="500"></textarea>
-                                        <label for="textarea1">Observações</label>
+                                        <textarea id="observacoes" class="materialize-textarea" maxlength="500" data-length="500"></textarea>
+                                        <label for="observacoes">Observações</label>
                                     </div>
                                 </div>
 
@@ -572,6 +572,7 @@ include 'configs/config.php'; //meta DB
                     $('#modal1').modal();
                     $('#BtnProj').tooltip({delay: 50});
                     $('.collapsible').collapsible();
+                    $('textarea').characterCounter();
 
                 
                     $.ajax({
