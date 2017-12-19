@@ -228,11 +228,11 @@ where s.id=$id_lastLevantamento");
                 </div>
 
                 <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
-                    <b>Telefone: </b>' . $infoClienteResult[4] . '<br>
+                    <b>Telefone: </b>' . $infoClienteResult[5] . '<br>
                 </div>
             
                 <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
-                   <b>Contribuinte: </b>' . $infoClienteResult[5] . '<br>
+                   <b>Contribuinte: </b>' . $infoClienteResult[4] . '<br>
                 </div>
                 
             </div>

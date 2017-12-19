@@ -27,6 +27,32 @@ $sql_tecnicos = $conn_etica->prepare("SELECT Tbl_Grh_Funcionarios.intCodigo AS c
         . "ORDER BY Tbl_Grh_Funcionarios.intCodigo");
 $sql_tecnicos->execute();
 $tecnicos = $sql_tecnicos->fetchAll();
+
+$sql_tec_assist = $conn_meta->prepare("select id_tecnico from tecnico_servico where id_servico='" . $id_servico . "'");
+$sql_tec_assist->execute();
+$tecnicos_assistencia = $sql_tec_assist->fetchAll();
+
+$todos_ids_tec = array();
+$todos_ids_assi = array();
+
+foreach ($tecnicos as $tecnico) {
+    $todos_ids_tec[] = $tecnico['codigo'];
+}
+
+foreach ($tecnicos_assistencia as $tec_assist) {
+    $todos_ids_assi[] = $tec_assist['id_tecnico'];
+}
+
+$ids_tecnicos_escolhidos = array_intersect($todos_ids_tec, $todos_ids_assi); //dá os valores iguais dos arrays
+/* echo "<pre>";
+  print_r($ids_tecnicos_escolhidos);
+  echo "</pre>";
+
+  foreach ($tecnicos as $tecnico) { //verificar se id é o mesmo
+  if (in_array($tecnico['codigo'], $ids_tecnicos_escolhidos)) {
+  echo 'sim';
+  }
+  } */
 ?>
 <form class="form_modalAssign" method="POST">
     <h4>Atribuir Asistência</h4><br>
@@ -34,13 +60,12 @@ $tecnicos = $sql_tecnicos->fetchAll();
         <div class="input-field col s12">
             <i class="material-icons prefix">person_add</i>
             <select multiple name="tecnicos" id="tecnicos">
-                <option disabled >Atribua um técnico para a assistência</option>
+                <option disabled>Choose your option</option>
                 <?php
                 foreach ($tecnicos as $tecnico) {
-                    echo "<option value='" . $tecnico['codigo'] . "'>" . $tecnico['nome'] . "</option>";
+                    echo '<option value="' . $tecnico['codigo'] . '"' . (in_array($tecnico['codigo'], $ids_tecnicos_escolhidos) ? 'selected="selected"' : '') . '>' . $tecnico['nome'] . '</option>';
                 }
                 ?>
-
             </select>
             <label for="icon_prefix">Técnico</label>
         </div>

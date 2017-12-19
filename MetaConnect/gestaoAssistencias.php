@@ -224,7 +224,7 @@ include 'configs/config.php'; //meta DB
                     $('#assign_modal #tecnicos option:checked').each(function () {
                         selected.push($(this).attr('value'));
                     });
-
+                    debugger;
                     dados_serv_tec = {
                         id_servico: gestaoAssistencia.idservico,
                         tecnicos_selecionados: selected
@@ -235,7 +235,10 @@ include 'configs/config.php'; //meta DB
                         data: dados_serv_tec,
                         url: 'php/Assistencias/insertTecnicoAssist.php',
                         success: function (response) {
-                            Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
+                            //debugger;
+                            alert(response);
+
+                            //Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
                         },
                         error: function () {
                             alert(gestaoAssistencia.MensagemErro);
