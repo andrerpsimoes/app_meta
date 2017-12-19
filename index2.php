@@ -13,7 +13,7 @@ $res= file_get_contents($url);
 $json=json_decode($res);
 
 
-print_r($json->routes[0]->legs[0]->distance->text);
+echo $json->routes[0]->legs[0]->distance->text;
 /*
   foreach ($json->routes as $percurso){
           
