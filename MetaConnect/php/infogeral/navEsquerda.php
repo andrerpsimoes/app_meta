@@ -59,6 +59,12 @@
                     </div>
                 </li>
                 <li class="bold">
+                    <a href="historico.php" class="waves-effect waves-cyan">
+                        <i class="material-icons">history</i>
+                        <span class="nav-text">Histórico</span>
+                    </a>
+                </li>
+                <li class="bold">
                     <a href="#" class="waves-effect waves-cyan">
                         <i class="material-icons">mail_outline</i>
                         <span class="nav-text">Mailbox</span>

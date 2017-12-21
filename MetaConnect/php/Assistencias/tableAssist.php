@@ -15,9 +15,6 @@ include '../../configs/config2.php'; // eticadata DB
 
 
 $tableAssist = '
-
-                            <h3 class="center" style="margin-bottom: 50px;">Gestão de Assistências</h3>
-
                             <table class="striped centered" id="tableAssist">
                                 <thead>
                                     <tr>

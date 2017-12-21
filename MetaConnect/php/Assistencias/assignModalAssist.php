@@ -75,11 +75,11 @@ $ids_tecnicos_escolhidos = array_intersect($todos_ids_tec, $todos_ids_assi); //d
     <div class="row">
         <div class="col s6">
             <label for="icon_prefix">Dia</label>
-            <input type="text" class="datepicker">
+            <input type="text" class="datepicker" id="day">
         </div>
         <div class="col s6">
             <label for="icon_prefix">Hora</label>
-            <input type="text" class="timepicker">
+            <input type="text" class="timepicker" id="hour">
         </div>
     </div>
 
@@ -95,7 +95,8 @@ $ids_tecnicos_escolhidos = array_intersect($todos_ids_tec, $todos_ids_assi); //d
             weekdaysFull: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
             weekdaysShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'],
             weekdaysLetter: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-            format: 'd !de mmmm !de yyyy',
+            //format: 'd !de mmmm !de yyyy',
+            format: 'yyyy/mm/dd',
             formatSubmit: 'yyyy/mm/dd',
 
             selectMonths: true, // Creates a dropdown to control month

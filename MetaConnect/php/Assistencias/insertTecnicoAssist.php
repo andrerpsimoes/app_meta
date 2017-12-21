@@ -12,10 +12,18 @@
 
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
+
 $id_servico = $_POST['id_servico'];
 $id_tecnicos_novos = $_POST['tecnicos_selecionados'];
-print_r($id_tecnicos_novos);
+$hora = $_POST['hora'];
+$dia = $_POST['dia'];
 
+$datetime = $dia . ' ' . $hora;
+
+//echo $datetime;
+if (empty($id_tecnicos_novos)) {
+    return 0;
+}
 
 $sql_select_tecnico_servico = $conn_meta->prepare("SELECT id_tecnico FROM tecnico_servico where id_servico='" . $id_servico . "'");
 $sql_select_tecnico_servico->execute();
@@ -47,17 +55,18 @@ $ids_to_insert = array_diff($novos, $existentes);
 if (isset($id_tecnicos_novos) && empty($select_existentes)) {
 
 
-    $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico) VALUES";
+    $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico, data) VALUES";
     $i = 0;
     $len = count($id_tecnicos_novos);
     foreach ($id_tecnicos_novos as $tecnicos) {
         if ($i == $len - 1) {
-            $insert_servicoTecnico .= "($tecnicos,$id_servico)";
+            $insert_servicoTecnico .= "($tecnicos,$id_servico, '$datetime')";
         } else {
-            $insert_servicoTecnico .= "($tecnicos,$id_servico),";
+            $insert_servicoTecnico .= "($tecnicos,$id_servico, '$datetime'),";
         }
         $i++;
     }
+    //echo $insert_servicoTecnico;
 
     $query_serv_tec = $conn_meta->prepare($insert_servicoTecnico);
     $query_serv_tec->execute();
@@ -88,17 +97,18 @@ if (isset($id_tecnicos_novos) && empty($select_existentes)) {
 
     $len = count($ids_to_insert);
     if ($len >= 1) {
-        $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico) VALUES";
+        $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico, data) VALUES";
         $i = 0;
 
         foreach ($ids_to_insert as $insert) {
             if ($i == $len - 1) {
-                $insert_servicoTecnico .= "($insert,$id_servico)";
+                $insert_servicoTecnico .= "($insert,$id_servico, '$datetime')";
             } else {
-                $insert_servicoTecnico .= "($insert,$id_servico),";
+                $insert_servicoTecnico .= "($insert,$id_servico, '$datetime'),";
             }
             $i++;
         }
+        //echo $insert_servicoTecnico;
 
         $query_insert = $conn_meta->prepare($insert_servicoTecnico);
         $query_insert->execute();
