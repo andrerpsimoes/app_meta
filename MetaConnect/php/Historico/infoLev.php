@@ -71,7 +71,7 @@ $telefone = $infoClienteResult['strTelefone'];
 ?>
 
 <form class="form_modalInfo" method="POST">
-    <h4>Informação Assistência</h4><br>
+    <h4>Informação Levantamento</h4><br>
     <div class="row" style="margin-bottom: 7px;">
         <div class="input-field col s8">
             <?php

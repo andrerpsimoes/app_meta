@@ -63,11 +63,18 @@ $telefone = $_POST['telefone'];
     </div>
 </div>
 
+<div class="row" id="rowsearch">
+    <div class="input-field col s4">
+        <i class="material-icons prefix">search</i>
+        <input type="text" class="form-control" id="search">
+        <label for="icon_prefix">Procurar</label>
+    </div>
+</div>
+
 <script>
-     $(document).ready(function(){
-   
-    $('ul.tabs').tabs();
-    historico.analise();
-  });
+    $(document).ready(function () {
+        $('ul.tabs').tabs();
+        historico.analise();
+    });
 </script>
 

@@ -69,19 +69,19 @@ include 'configs/config.php'; //meta DB
 
 
         <!-- Modal Info Assistencia-->
-        <div id="infoAssist_modal" class="modal" style="width: 80%; height: 80%;">
+        <div id="infoAssist_modal" class="modal" style="width: 80%; height: 80%; max-height: 100%;">
             <div class="modal-content" id="content_infoAssist">
             </div>
         </div>
-        
+
         <!-- Modal Info Levantamento-->
-        <div id="infoLev_modal" class="modal" style="width: 80%; height: 80%;">
+        <div id="infoLev_modal" class="modal" style="width: 80%; height: 80%; max-height: 100%;">
             <div class="modal-content" id="content_infoLev">
             </div>
         </div>
-        
+
         <!-- Modal Info Projeto -->
-        <div id="infoProj_modal" class="modal" style="width: 80%; height: 80%;">
+        <div id="infoProj_modal" class="modal" style="width: 50%; height: 85%; max-height: 100%;">
             <div class="modal-content" id="content_infoProj">
             </div>
         </div>
@@ -108,6 +108,7 @@ include 'configs/config.php'; //meta DB
                     //alert("analise");
                     //graficos
                     $('#bar_info').html('Dashboard');
+                    $('#rowsearch').hide();
                 },
 
                 projetos: function () {
@@ -123,6 +124,8 @@ include 'configs/config.php'; //meta DB
                         success: function (response) {
 
                             $('#bar_info').html(response);
+                            $('#rowsearch').show();
+                            $('#search').val('');
 
                         },
                         error: function () {
@@ -143,8 +146,10 @@ include 'configs/config.php'; //meta DB
                         data: {id_cliente: id_cliente},
                         url: 'php/Historico/levantamentos.php',
                         success: function (response) {
-
+                            
                             $('#bar_info').html(response);
+                            $('#rowsearch').show();
+                            $('#search').val('');
 
                         },
                         error: function () {
@@ -154,10 +159,9 @@ include 'configs/config.php'; //meta DB
                 },
 
                 assistencias: function () {
-                    //alert("asssistencias");
                     var cliente = $("#autocomplete-input").val();
                     var id_cliente = cliente.substr(0, cliente.indexOf(' '));
-                    //alert(id_cliente);
+
                     $.ajax({
 
                         type: "POST",
@@ -166,6 +170,8 @@ include 'configs/config.php'; //meta DB
                         success: function (response) {
 
                             $('#bar_info').html(response);
+                            $('#rowsearch').show();
+                            $('#search').val('');
 
                         },
                         error: function () {
@@ -194,13 +200,13 @@ include 'configs/config.php'; //meta DB
 
                 infoLev: function (id_lev) {
                     historico.idservico = id_lev.closest('tr').attr('id');
-                    
+
                     $.ajax({
                         type: "POST",
                         data: {id_servico: historico.idservico},
                         url: 'php/Historico/infoLev.php',
                         success: function (response) {
-                            $('#content_infoAssist').html(response);
+                            $('#content_infoLev').html(response);
                         },
                         error: function () {
                             alert(gestaoAssistencia.MensagemErro);
@@ -210,14 +216,21 @@ include 'configs/config.php'; //meta DB
                 },
 
                 infoProj: function (id_proj) {
-                    historico.idservico = id_proj.closest('tr').attr('id');
-                    
+                    var cliente = $("#autocomplete-input").val();
+                    var id_cliente = cliente.substr(0, cliente.indexOf(' '));
+                    var id_projeto = id_proj.closest('tr').attr('id');
+
+                    var data_proj = {
+                        id_cliente: id_cliente,
+                        id_projeto: id_projeto
+                    };
+
                     $.ajax({
                         type: "POST",
-                        data: {id_servico: historico.idservico},
+                        data: data_proj,
                         url: 'php/Historico/infoProj.php',
                         success: function (response) {
-                            $('#content_infoAssist').html(response);
+                            $('#content_infoProj').html(response);
                         },
                         error: function () {
                             alert(gestaoAssistencia.MensagemErro);
@@ -340,6 +353,39 @@ include 'configs/config.php'; //meta DB
                     historico.infoProj(id_proj);
                 });
 
+                $(document).on("click", "#search", function () {
+                    $("#search").keyup(function () {
+
+                        var searchTerm = $("#search").val(),
+                                searchSplit = searchTerm.replace(/ /g, "'):containsi('");
+
+                        $.extend($.expr[':'], {'containsi': function (elem, i, match, array) {
+                                return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                            }
+                        });
+
+                        $("#assistencias_cliente tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                            $(this).hide();
+                        });
+                        $("#levantamentos_cliente tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                            $(this).hide();
+                        });
+                        $("#projetos_cliente tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                            $(this).hide();
+                        });
+
+                        $("#assistencias_cliente tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                            $(this).show();
+                        });
+                        $("#levantamentos_cliente tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                            $(this).show();
+                        });
+                        $("#projetos_cliente tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                            $(this).show();
+                        });
+
+                    });
+                });
             });
         </script>
     </body>

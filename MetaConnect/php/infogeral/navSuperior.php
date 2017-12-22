@@ -36,6 +36,7 @@
                   <i class="material-icons">settings_overscan</i>
                 </a>
               </li>
+              <!--
               <li>
                 <a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown">
                   <i class="material-icons">notifications_none
@@ -55,7 +56,7 @@
                 <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                   <i class="material-icons">format_indent_increase</i>
                 </a>
-              </li>
+              </li>-->
             </ul>
             <!-- notifications-dropdown -->
             <ul id="notifications-dropdown" class="dropdown-content">

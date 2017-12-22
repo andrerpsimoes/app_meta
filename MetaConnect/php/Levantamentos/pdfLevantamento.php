@@ -1,13 +1,13 @@
 <?php
 
-  include("restrito.php");
+include("restrito.php");
 
-  //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
-  //iniciada, como ve que nao tem este e redirecionado para a pagina incial
-  if (isset($_GET['logout'])) {
-  session_destroy();
-  header("Refresh:0");
-  } 
+//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+//iniciada, como ve que nao tem este e redirecionado para a pagina incial
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Refresh:0");
+}
 
 
 require_once '../mpdf/mpdf.php';
@@ -16,7 +16,7 @@ include '../../configs/config2.php'; // eticadata DB
 
 $id_lastLevantamento = $_GET['a'];
 
-try{
+if ($id_lastLevantamento) { //caso exista
     /*
      * ********** Inicio Querys **************
      */
@@ -33,7 +33,7 @@ where s.id=$id_lastLevantamento");
     $datetimeFromSql = $servicoDetailsResult[0];
     $time = strtotime($datetimeFromSql);
     $myFormatForView = date("d/m/Y H:i:s", $time);
-    
+
     $id_cliente = $servicoDetailsResult[5];
     $id_projeto = $servicoDetailsResult[6];
     $id_counter = $servicoDetailsResult[7];
@@ -53,6 +53,7 @@ where s.id=$id_lastLevantamento");
     $infoCliente->execute();
     $infoClienteResult = $infoCliente->fetch();
 
+    $morada = $infoClienteResult[2];
     /*
      * ********** Fim Querys **************
      */
@@ -176,7 +177,7 @@ where s.id=$id_lastLevantamento");
 
                                 <td>
                                     Guia de Levantamento<br>
-                                    Levantamento:' . date("Y") . '/'  . $id_counter . '<br>
+                                    Levantamento: ' . date("Y") . '/' . $id_counter . '<br>
                                     Data: ' . $myFormatForView . '<br>
 
                                 </td>
@@ -338,7 +339,33 @@ where s.id=$id_lastLevantamento");
                 . '<div  style="width: 60%;float: left;margin-bottom: 1px;" ><i><b>Contacto Responsável: </b></i>' . $contacto_responsavel . '</div>'
                 . '<div style="width: 30%;float: left;margin-bottom: 1px;"><i><b>Local: </b></i>' . $local . '</div>'
                 . '</div></div>';
+        $morada = $local;
     }    //fim caso nao haja projeto
+
+    try {
+
+        $url = "https://maps.googleapis.com/maps/api/directions/json?origin=%27Arruamento%20D%20Lote%2036,%203854-909%20Albergaria-aVelha%27&destination=" . urlencode($morada) . "&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAyJgb1BrQuegtg";
+
+
+
+        $res = file_get_contents($url);
+
+
+
+        $json = json_decode($res);
+
+        $html .= '  <br> <div class="Assistencia" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;margin-bottom: 10px;">
+                       <label>Informações Sobre a Viagem</label>
+                   </div>
+            <b>Local Partida: </b> Metaveiro <br>
+            <b>Local Chegada:</b> ' . $morada . '<br><br>
+                  
+                   
+           <b>Distância: </b>' . $json->routes[0]->legs[0]->distance->text . '<br>'
+                . '<b>Duração:</b> ' . $json->routes[0]->legs[0]->duration->text;
+    } catch (Exception $exc) {
+        echo $exc->getTraceAsString();
+    }
 
     $html .= '
             </div>
@@ -351,8 +378,7 @@ where s.id=$id_lastLevantamento");
     $mpdf = new mPDF('c', 'A4');
     $mpdf->writeHTML($html);
     $mpdf->Output('pdfLevantamento.pdf', 'I');
-} catch (Exception $ex) {
+} else {
     header("Location:../../page-404.php");
 }
-    
 ?>

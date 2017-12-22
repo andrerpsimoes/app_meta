@@ -16,7 +16,7 @@ include '../../configs/config2.php'; // eticadata DB
 $id_cliente = $_POST['id_cliente'];
 
 $projeto_cliente = '
-                            <table class="striped centered" id="projeto_cliente">
+                            <table class="striped centered" id="projetos_cliente">
                                 <thead>
                                     <tr>
                                         <th data-field="name"><a class="" style="color: black;">Descrição</a></th>
