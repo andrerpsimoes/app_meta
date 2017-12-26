@@ -1,96 +1,111 @@
 <?php
-   include("configs/config.php");
-   session_start();
-   $error="";
-   if($_SERVER["REQUEST_METHOD"] == "POST") {
-      // username and password sent from form 
-      
-      $myusername = $_POST['username'];
-      $mypassword = $_POST['password']; 
+include 'configs/config.php'; //meta DB
+session_start();
+$error = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // username and password sent from form 
 
-      //md5 conversion
-      $mypassword = md5($mypassword);
+    $myusername = $_POST['username'];
+    $mypassword = $_POST['password'];
 
-      // database query
+    //md5 conversion
+    $mypassword = md5($mypassword);
 
-      $query=$conn_meta->prepare("select id, nome , tipoconta, mail from login where username='".$myusername."' and pass='".$mypassword."'");
-   
-      $query->execute();
-      $result = $query;
-     $num_rows = $query->rowCount();
-          
-      if($num_rows == -1) {    
-        foreach($result as $row)
-         {
-          $_SESSION["id"]= $row["id"];
-          $_SESSION["nome"]= $row["nome"];
-          $_SESSION["tipoconta"]= $row["tipoconta"];
-          $_SESSION["mail"]= $row["mail"];
-          $SESSION['CREATED'] = time();
-          header("Location: page-principal.php");
-         }
-      }else {
-       $error = "Nome ou Palavra-Passe incorreta!";
-      }
+    // database query
 
+    $query = $conn_meta->prepare("select id, nome , tipoconta, mail, foto, departamento, telemovel from login where username='" . $myusername . "' and pass='" . $mypassword . "'");
 
-    
-   }
+    $query->execute();
+    $result = $query;
+    $num_rows = $query->rowCount();
+
+    if ($num_rows == -1) {
+        foreach ($result as $row) {
+            $_SESSION["id"] = $row["id"];
+            $_SESSION["nome"] = $row["nome"];
+            $_SESSION["tipoconta"] = $row["tipoconta"];
+            $_SESSION["mail"] = $row["mail"];
+            $_SESSION["foto"] = $row["foto"];
+            $_SESSION["departamento"] = $row["departamento"];
+            $_SESSION["telemovel"] = $row["telemovel"];
+            $SESSION['CREATED'] = time();
+            header("Location: page-principal.php");
+        }
+    } else {
+        $error = "Utilizador ou Palavra-Passe incorreta!";
+    }
+}
 ?>
-<html>
-   
-   <head>
-      <title>Metaveiro</title>
+<!DOCTYPE html>
+<html lang="en">
 
-      <!-- materialize -->
-      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
-
-      <!-- Fonts -->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-      <!-- custom css -->
-      <link rel="stylesheet" type="text/css" href="css/login.css">
-
-       <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-   </head>
-   
-   <body>
-      <div class="section"></div>
-
-      <center>
-         <div  class="container z-depth-3 y-depth-3 x-depth-3 grey lighten-4 row" id="main-wraper">
-            
-            <h4>MetaConnect</h4>
-            <div class="section"></div>
-
-            <form action = "" method = "post">
-               <div class='row '>
-                  <div class='input-field col s12'>
-                     <input class='validate' type="text" name='username' id='email' required />
-                     <label for='email'>Nome de utilizador</label>
-                  </div>
-               </div>
-               <div class='row'>
-                  <div class='input-field col m12'>
-                     <input class='validate' type='password' name='password' id='password' required />
-                     <label for='password'>Palavra-Passe</label>
-                  </div>
-                  <label style='float: right;'>
-                     <b style="color: #cc0000;"><?php echo $error; ?></b>
-                  </label>
-               </div>
-               <div class='row'>
-                     <button type='submit' name='btn_login' class='col m12 btn btn-small white black-text  waves-effect z-depth-1 y-depth-1'>Login</button>
-               </div>
-            </form>
-
-         </div>
-      </center>
-
-   <!-- Scripting incorporation -->
-   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
-
-   </body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="msapplication-tap-highlight" content="no">
+        <title>ServPro</title>
+        <!-- Favicons-->
+        <link rel="icon" href="images/favicon/favicon-32x32.png" sizes="32x32">
+        <!-- Favicons-->
+        <link rel="apple-touch-icon-precomposed" href="images/favicon/apple-touch-icon-152x152.png">
+        <!-- For iPhone -->
+        <meta name="msapplication-TileColor" content="#00bcd4">
+        <meta name="msapplication-TileImage" content="images/favicon/mstile-144x144.png">
+        <!-- For Windows Phone -->
+        <!-- CORE CSS-->
+        <link href="css/themes/fixed-menu/materialize.css" type="text/css" rel="stylesheet">
+        <link href="css/themes/fixed-menu/style.css" type="text/css" rel="stylesheet">
+        <!-- Custome CSS-->
+        <link href="css/custom/custom.css" type="text/css" rel="stylesheet">
+        <link href="css/layouts/page-center.css" type="text/css" rel="stylesheet">
+        <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
+        <link href="vendors/perfect-scrollbar/perfect-scrollbar.css" type="text/css" rel="stylesheet">
+    </head>
+    <body class="grey lighten-4">
+        <!-- Start Page Loading -->
+        <div id="loader-wrapper">
+            <div id="loader"></div>
+            <div class="loader-section section-left"></div>
+            <div class="loader-section section-right"></div>
+        </div>
+        <!-- End Page Loading -->
+        <div id="login-page" class="row">
+            <div class="col s12 z-depth-4 card-panel">
+                <form class="login-form" method="POST">
+                    <div class="row">
+                        <div class="input-field col s12 center">
+                            <img src="images/logo/login-logo.png" alt="" class="circle responsive-img valign profile-image-login">
+                            <p class="center login-form-text">ServPro</p>
+                        </div>
+                    </div>
+                    <div class="row margin">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix pt-5">person_outline</i>
+                            <input class="validate" type="text" name="username" id="email" required>
+                            <label for="username" class="center-align">Utilizador</label>
+                        </div>
+                    </div>
+                    <div class="row margin">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix pt-5">lock_outline</i>
+                            <input class="validate" type="password" name="password" id="password" required>
+                            <label for="password">Palavra-passe</label>
+                        </div>
+                    </div>
+                    <label style="color: red; float: right;"><?php echo $error; ?></label>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <button type="submit" name="btn_login" class="btn waves-effect waves-light col s12">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- ================================================
+        Scripts
+        ================================================ -->
+        <!-- jQuery Library -->
+        <?php include 'php/infogeral/js.php'; ?>
+    </body>
 </html>

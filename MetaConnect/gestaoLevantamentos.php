@@ -25,7 +25,7 @@ include 'configs/config.php'; //meta DB
             <div class="wrapper">
                 <!-- START CONTENT -->
                 <section id="content" style="margin-bottom: 70px;">
-                    <h3 class="center" style="margin-bottom: 50px;">Gestão de Assistências</h3>
+                    <h3 class="center" style="margin-bottom: 50px;">Gestão de Levantamentos</h3>
                     <div class="container-fluid">
 
                         <div class="row">
@@ -56,7 +56,7 @@ include 'configs/config.php'; //meta DB
                     </div>
 
                     <div class="row" id="tableContainer">
-                        <!-- tableAssist --> 
+                        <!-- tableLev --> 
                     </div>
             </div>
         </section>
@@ -70,8 +70,8 @@ include 'configs/config.php'; //meta DB
 <!-- Modal Eliminar -->
 <div id="delete_modal" class="modal">
     <div class="modal-content" id="content_delete">
-        <h4>Eliminar Assistência</h4>
-        <p>Tem a certeza que pretende eliminar esta assistência?</p>
+        <h4>Eliminar Levantamento</h4>
+        <p>Tem a certeza que pretende eliminar este levantamento?</p>
     </div>
     <div class="modal-footer">
         <a class="modal-action modal-close waves-effect waves-green btn-flat" id="cancelarButton">Cancelar</a>
@@ -122,7 +122,7 @@ include 'configs/config.php'; //meta DB
 
 <script>
 
-    var gestaoAssistencia = {
+    var gestaoLevantamento = {
 
         //********variaveis globais********
 
@@ -131,16 +131,16 @@ include 'configs/config.php'; //meta DB
         //********Fim variaveis globais********
 
         editButton: function (this_row) {
-            gestaoAssistencia.idservico = this_row.closest('tr').attr('id');
+            gestaoLevantamento.idservico = this_row.closest('tr').attr('id');
             $.ajax({
                 type: "POST",
-                data: {id_servico: gestaoAssistencia.idservico},
-                url: 'php/Assistencias/modaleditAssist.php',
+                data: {id_servico: gestaoLevantamento.idservico},
+                url: 'php/Levantamentos/modaleditLev.php',
                 success: function (response) {
                     $('#content_edit').html(response);
                 },
                 error: function () {
-                    alert(gestaoAssistencia.MensagemErro);
+                    alert(gestaoLevantamento.MensagemErro);
                 }
             });
             $('#edit_modal').modal('open');
@@ -148,56 +148,56 @@ include 'configs/config.php'; //meta DB
         guardarModalEdit: function () {
 
             data_to_edit = {
-                id_servico: gestaoAssistencia.idservico,
+                id_servico: gestaoLevantamento.idservico,
                 prioridade: $("#edit_modal #prioridade").val(),
                 observacoes: $("#edit_modal #observacoes").val()
             };
             $.ajax({
                 type: "POST",
                 data: data_to_edit,
-                url: 'php/Assistencias/editAssistencia.php',
+                url: 'php/Levantamentos/editLevantamento.php',
                 success: function (response) {
                     $.ajax({
-                        url: 'php/Assistencias/tableAssist.php',
+                        url: 'php/Levantamentos/tableLev.php',
                         success: function (response) {
                             debugger;
                             $('#tableContainer').html(response);
-                            Materialize.toast('Assistência editada com sucesso!', 3000, 'rounded');
+                            Materialize.toast('Levantamento editado com sucesso!', 3000, 'rounded');
                         },
                         error: function () {
-                            alert(gestaoAssistencia.MensagemErro);
+                            alert(gestaoLevantamento.MensagemErro);
                         }
                     });
                 },
                 error: function () {
-                    alert(gestaoAssistencia.MensagemErro);
+                    alert(gestaoLevantamento.MensagemErro);
                 }
             });
         },
         deleteButton: function (del_this) {
-            gestaoAssistencia.idservico = del_this.closest('tr').attr('id');
+            gestaoLevantamento.idservico = del_this.closest('tr').attr('id');
             $('#delete_modal').modal('open');
         },
         simModal: function () {
             $.ajax({
                 type: "POST",
-                data: {id_servico: gestaoAssistencia.idservico},
-                url: 'php/Assistencias/deleteAssist.php',
+                data: {id_servico: gestaoLevantamento.idservico},
+                url: 'php/Levantamentos/deleteLev.php',
                 success: function (response) {
                     $.ajax({
-                        url: 'php/Assistencias/tableAssist.php',
+                        url: 'php/Levantamentos/tableLev.php',
                         success: function (response) {
                             debugger;
                             $('#tableContainer').html(response);
-                            Materialize.toast('Assistência eliminada com sucesso!', 3000, 'rounded');
+                            Materialize.toast('Levantamento eliminado com sucesso!', 3000, 'rounded');
                         },
                         error: function () {
-                            alert(gestaoAssistencia.MensagemErro);
+                            alert(gestaoLevantamento.MensagemErro);
                         }
                     });
                 },
                 error: function () {
-                    alert(gestaoAssistencia.MensagemErro);
+                    alert(gestaoLevantamento.MensagemErro);
                 }
             });
         },
@@ -208,31 +208,31 @@ include 'configs/config.php'; //meta DB
             $('#assign_modal').modal('close');
         },
         infoButton: function (info_this) {
-            gestaoAssistencia.idservico = info_this.closest('tr').attr('id');
+            gestaoLevantamento.idservico = info_this.closest('tr').attr('id');
             $.ajax({
                 type: "POST",
-                data: {id_servico: gestaoAssistencia.idservico},
-                url: 'php/Assistencias/infoModalAssist.php',
+                data: {id_servico: gestaoLevantamento.idservico},
+                url: 'php/Levantamentos/infoModalLev.php',
                 success: function (response) {
                     $('#content_info').html(response);
                 },
                 error: function () {
-                    alert(gestaoAssistencia.MensagemErro);
+                    alert(gestaoLevantamento.MensagemErro);
                 }
             });
             $('#info_modal').modal('open');
         },
         atribuirServico: function (id_this) {
-            gestaoAssistencia.idservico = id_this.closest('tr').attr('id');
+            gestaoLevantamento.idservico = id_this.closest('tr').attr('id');
             $.ajax({
                 type: "POST",
-                data: {id_servico: gestaoAssistencia.idservico},
-                url: 'php/Assistencias/assignModalAssist.php',
+                data: {id_servico: gestaoLevantamento.idservico},
+                url: 'php/Levantamentos/assignModalLev.php',
                 success: function (response) {
                     $('#content_assign').html(response);
                 },
                 error: function () {
-                    alert(gestaoAssistencia.MensagemErro);
+                    alert(gestaoLevantamento.MensagemErro);
                 }
             });
             $('#assign_modal').modal('open');
@@ -247,7 +247,7 @@ include 'configs/config.php'; //meta DB
             //alert(hora);
 
             dados_serv_tec = {
-                id_servico: gestaoAssistencia.idservico,
+                id_servico: gestaoLevantamento.idservico,
                 tecnicos_selecionados: selected,
                 dia: dia,
                 hora: hora
@@ -255,14 +255,13 @@ include 'configs/config.php'; //meta DB
             $.ajax({
                 type: "POST",
                 data: dados_serv_tec,
-                url: 'php/Assistencias/insertTecnicoAssist.php',
+                url: 'php/Levantamentos/insertTecnicoLev.php',
                 success: function (response) {
 
-                    alert(response);
-                    //Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
+                    Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
                 },
                 error: function () {
-                    alert(gestaoAssistencia.MensagemErro);
+                    alert(gestaoLevantamento.MensagemErro);
                 }
             });
         },
@@ -273,47 +272,47 @@ include 'configs/config.php'; //meta DB
             $('select').material_select();
             $('.modal').modal();
             $.ajax({
-                url: 'php/Assistencias/tableAssist.php',
+                url: 'php/Levantamentos/tableLev.php',
                 success: function (response) {
                     $('#tableContainer').html(response);
                 },
                 error: function () {
-                    alert(gestaoAssistencia.MensagemErro);
+                    alert(gestaoLevantamento.MensagemErro);
                 }
             });
         }
     };
     $(document).ready(function () {
 
-        gestaoAssistencia.init();
+        gestaoLevantamento.init();
         $(document).on("click", "a[name='BtnEdit']", function () {
             var this_row = $(this);
-            gestaoAssistencia.editButton(this_row);
+            gestaoLevantamento.editButton(this_row);
         });
         $(document).on("click", "a[name='BtnDelete']", function () {
             var del_this = $(this);
-            gestaoAssistencia.deleteButton(del_this);
+            gestaoLevantamento.deleteButton(del_this);
         });
         $("#guardarButton").click(function () {
-            gestaoAssistencia.guardarModalEdit();
+            gestaoLevantamento.guardarModalEdit();
         });
         $("#simButton").click(function () {
-            gestaoAssistencia.simModal();
+            gestaoLevantamento.simModal();
         });
         $("#cancelarButton").click(function () {
-            gestaoAssistencia.cancelarModal();
+            gestaoLevantamento.cancelarModal();
         });
         $("#guardarAssignButton").click(function () {
-            gestaoAssistencia.guardarModalAssign();
+            gestaoLevantamento.guardarModalAssign();
         });
 
         $(document).on("click", "a[name='BtnInfo']", function () {
             var info_this = $(this);
-            gestaoAssistencia.infoButton(info_this);
+            gestaoLevantamento.infoButton(info_this);
         });
         $(document).on("click", "td:first-child", function () {
             var id_this = $(this);
-            gestaoAssistencia.atribuirServico(id_this);
+            gestaoLevantamento.atribuirServico(id_this);
         });
 
         //procura em toda a tabela digitando no input search
@@ -326,11 +325,11 @@ include 'configs/config.php'; //meta DB
                 }
             });
 
-            $("#tableAssist tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+            $("#tableLev tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
                 $(this).hide();
             });
 
-            $("#tableAssist tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+            $("#tableLev tbody tr:containsi('" + searchSplit + "')").each(function (e) {
                 $(this).show();
             });
 

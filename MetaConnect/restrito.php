@@ -17,6 +17,6 @@
             $_SESSION['CREATED'] = time(); // update last activity time stamp
     }
     else{
-        header("Location:index.html");
+        header("Location:index.php");
     }
 ?>

@@ -1,5 +1,45 @@
+<?php
+
+include("restrito.php");
+
+$_SESSION["tipoconta"]; 
+
+if($_SESSION["tipoconta"] == 1){
+    $tipoconta = 'Utilizador';
+}elseif ($_SESSION["tipoconta"] == 2) {
+    $tipoconta = 'Gestor';
+}elseif($_SESSION["tipoconta"] == 3){
+    $tipoconta = 'Administrador';
+}else{
+    $tipoconta = '';
+}
+
+?>
+
 <aside id="left-sidebar-nav">
     <ul id="slide-out" class="side-nav leftside-navigation">
+        <li class="user-details cyan darken-2">
+              <div class="row">
+                <div class="col col s4 m4 l4">
+                    <img src="images/fotos/<?php echo $_SESSION["foto"];?>" alt="" class="circle responsive-img valign profile-image cyan">
+                </div>
+                <div class="col col s8 m8 l8">
+                  <ul id="profile-dropdown-nav" class="dropdown-content">
+                    <li>
+                      <a href="perfil.php" class="grey-text text-darken-1">
+                        <i class="material-icons">face</i> Perfil</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                      <a href="logout.php" class="grey-text text-darken-1">
+                        <i class="material-icons">keyboard_tab</i> Sair</a>
+                    </li>
+                  </ul>
+                  <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown-nav"><?php echo $_SESSION["nome"]; ?><i class="mdi-navigation-arrow-drop-down right"></i></a>
+                  <p class="user-roal"><?php echo $tipoconta; ?></p>
+                </div>
+              </div>
+            </li>
         <li class="no-padding">
             <ul class="collapsible" data-collapsible="accordion">
                 <li class="bold">
@@ -44,15 +84,15 @@
                     <div class="collapsible-body">
                         <ul>
                             <li class="bold">
-                                <a href="levantamento.php">
+                                <a href="gestaoLevantamentos.php">
                                     <i class="material-icons">keyboard_arrow_right</i>
-                                    <span>Gestão de Levantamento</span>
+                                    <span>Gestão de Levantamentos</span>
                                 </a>
                             </li>
                             <li class="bold">
                                 <a href="gestaoAssistencias.php">
                                     <i class="material-icons">keyboard_arrow_right</i>
-                                    <span>Gestão de Assistência</span>
+                                    <span>Gestão de Assistências</span>
                                 </a>
                             </li>
                         </ul>
