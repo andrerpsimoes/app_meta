@@ -26,7 +26,8 @@ if ($id_lastAssistencia) { //caso exista
      */
 
     $servicoDetails = $conn_meta->prepare("select s.data_hora, s.recebido_por, s.pedido_por, s.prioridade, s.observacoes, s.id_cliente, 
-(select id_projeto from projeto_cliente where is_active=1 and id=s.id_proj_cliente) as projeto, s.counter
+(select id_projeto from projeto_cliente where is_active=1 and id=s.id_proj_cliente) as projeto, s.counter, s.local_partida, s.local_chegada,
+s.distancia, s.duracao, s.distanciaAestrada, s.duracaoAestrada
 from servico s
 where s.id=$id_lastAssistencia");
 
@@ -42,6 +43,14 @@ where s.id=$id_lastAssistencia");
     $id_projeto = $servicoDetailsResult[6];
     $id_counter = $servicoDetailsResult[7];
 
+    $local_partida = $servicoDetailsResult[8];
+    $local_chegada = $servicoDetailsResult[9];
+    
+    $distancia = $servicoDetailsResult[10];
+    $duracao = $servicoDetailsResult[11];
+    $distanciaAestrada = $servicoDetailsResult[12];
+    $duracaoAestrada = $servicoDetailsResult[13];
+    
     //tipos de prioridade existentes
     if ($servicoDetailsResult[3] == 1) {
         $prioridade = ' Baixa';
@@ -350,34 +359,38 @@ where s.id=$id_lastAssistencia");
         
     }    //fim caso nao haja projeto
     
-    try {
-        
-        $url= "https://maps.googleapis.com/maps/api/directions/json?origin=%27Arruamento%20D%20Lote%2036,%203854-909%20Albergaria-aVelha%27&destination=".urlencode($morada)."&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAyJgb1BrQuegtg";
-        
-
-
-        $res= file_get_contents($url);
-
-
-
-        $json=json_decode($res);
-
+    
        $html.= '  <br> <div class="Assistencia" style="background-color: #eee; color: black;font-weight: bold;width: 100%;float: left;margin-bottom: 10px;">
                        <label>Informações Sobre a Viagem</label>
                    </div>
-            <b>Local Partida: </b> Metaveiro <br>
-            <b>Local Chegada:</b> '.$morada.'<br><br>
+           
                   
                    
-           <b>Distância: </b>'.$json->routes[0]->legs[0]->distance->text.'<br>'
-        . '<b>Duração:</b> '.$json->routes[0]->legs[0]->duration->text;
+            <div>
+            
+            <b>Local Partida: </b> '.$local_partida.' <br>
+            <b>Local Chegada:</b> '.$local_chegada.'<br><br>
+                
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                    <b>Distância S/ Autoestrada: </b>' . $distancia . '<br>
+                </div>
 
-        
-    } catch (Exception $exc) {
-        echo $exc->getTraceAsString();
-    }
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                    <b>Distancia C/ Autoestrada: </b>' . $distanciaAestrada . '<br>
+                </div>
+                
 
-    $html .= '
+
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                    <b>Duração S/ Autoestrada: </b>' . $duracao . '<br>
+                </div>
+
+                <div class="input-field" style="width: 50%;float: left;margin-bottom: 7px;">
+                    <b>Duração C/ Autoestrada: </b>' . $duracaoAestrada . '<br>
+                </div>
+
+            </div>
+         
             </div>
 
         </div>

@@ -8,7 +8,6 @@
   header("Refresh:0");
   }
 
-
 include 'configs/config2.php'; // eticadata DB
 include 'configs/config.php'; //meta DB
 
@@ -459,6 +458,7 @@ include 'configs/config.php'; //meta DB
                         pedido_por: $("#pedidopor").val(),
                         prioridade: $("#prioridade").val(),
                         observacoes: $("#observacoes").val()
+                        
                     };
 
 
@@ -466,17 +466,22 @@ include 'configs/config.php'; //meta DB
                         Materialize.toast('Preencha todos os campos!', 3000, 'rounded');
 
                     } else {
-
+                      
                         var valortextCliente = $("#autocomplete-input").val(),
+                           // select=$("#select").val()===null? 0 :$("#select").val(),   
+                               
                                 data = {
                                     id_cliente: valortextCliente.substr(0, valortextCliente.indexOf(' ')),
                                     id_projeto: $("#select").val(),
                                     pedido_por: $("#pedidopor").val(),
                                     prioridade: $("#prioridade").val(),
                                     observacoes: $("#observacoes").val(),
-                                    selecionados: selected
+                                    selecionados: selected,
+                                    cod_postal: $("#cod_postal").val(),
+                                    morada:$("#morada").val(),
+                                    localidade: $("#localidade").val()
                                 };
-                        
+                   
                         $.ajax({
 
                             type: "POST",
@@ -484,13 +489,19 @@ include 'configs/config.php'; //meta DB
                             url: 'php/Assistencias/insertAssist.php',
                             success: function (response) {
                                 var arr = $.parseJSON(response);
-                                window.open('http://localhost:82/1904/MetaConnect/php/assistencias/pdfAssistencia.php?a=' + arr.id_assistencia, '_blank');
+                                window.open('http://localhost:82/servpro/MetaConnect/php/assistencias/pdfAssistencia.php?a=' + arr.id_assistencia, '_blank');
+                                location.reload();
                             },
-                            error: function () {
-                                alert(assistencia.MensagemErro);
+                            error: function (response) {
+                                alert(response);
                             }
                         });
-                        $("#formId")[0].reset();
+                       // $("#formId")[0].reset(); 
+                      /* resolver depois o facto de quando se faz reset
+                       * estar a dar na mesma logo o projeto
+                       */
+                        
+                        
                     }
                     
                 },

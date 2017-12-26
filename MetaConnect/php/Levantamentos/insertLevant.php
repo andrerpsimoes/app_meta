@@ -21,6 +21,8 @@ if (isset($_POST['id_projeto'])) {
     $result = $query_proj_cli->fetch(); //um unico resultado
     $id_proj_cli = $result[0];
 
+      
+    
     //insert tab servico um levantamento
     $statement = $conn_meta->prepare("INSERT INTO servico(id_cliente, recebido_por, pedido_por, data_hora, observacoes, prioridade, tipo_servico, id_proj_cliente, estado, is_active)"
             . " VALUES ($id_cliente, '".$_SESSION['nome']."','$pedido_por', '$timestamp', '$observacoes', $prioridade, 1, $id_proj_cli, 1, 1)");
@@ -28,6 +30,10 @@ if (isset($_POST['id_projeto'])) {
     $statement->execute();
 
     $id_lastLevantamento = $conn_meta->lastInsertId();
+    
+    
+   
+    
 } else {
     //insert tab servico um levantamento
     $statement = $conn_meta->prepare("INSERT INTO servico(id_cliente, recebido_por, pedido_por, data_hora, observacoes, prioridade, tipo_servico, id_proj_cliente, estado, is_active)"
