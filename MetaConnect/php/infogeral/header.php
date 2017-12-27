@@ -6,7 +6,7 @@
     <meta name="keywords" content="servpro,calendario,metaveiro,gestão">
     <title>ServPro</title>
     <!-- Favicons-->
-    <link rel="icon" href="images/favicon/meta_logo.png" sizes="32x32">
+    <link rel="icon" href="images/favicon/servpro_favicon.png" sizes="390x390">
     <!-- Favicons-->
     <link rel="apple-touch-icon-precomposed" href="../../images/favicon/apple-touch-icon-152x152.png">
     <!-- For iPhone -->

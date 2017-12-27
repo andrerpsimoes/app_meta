@@ -9,6 +9,11 @@ if (isset($_GET['logout'])) {
 }
 include 'configs/config2.php'; // eticadata DB
 include 'configs/config.php'; //meta DB
+
+
+$sql_areas = $conn_meta->prepare("select id, descricao from area where id_parent is NULL and is_active=1");
+$sql_areas->execute();
+$areas = $sql_areas->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,20 +41,27 @@ include 'configs/config.php'; //meta DB
 
                             </div>
                             <div class="row" style="float: center;">
-                                <div class="col s2">
-                                    <h5 class="center">Ordenar por</h5>
+                                <div class="input-field col s3">
+                                    <select id="area">
+                                        <option disabled selected>Escolha uma área</option>
+                                        <?php
+                                        foreach ($areas as $area) {
+                                            echo '<option value=' . $area['id'] . '>' . $area['descricao'] . '</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                    <label>Ordenar por Área</label>
                                 </div>
-                                <div class="col s1">
-                                    <p>
-                                        <input type="checkbox" id="checkprioridade" value="1"/>
-                                        <label for="checkprioridade">Prioridade</label>
-                                    </p>
+                                <div class="input-field col s3">
+                                    <div class="select_subarea" id="select_subarea"> 
+                                        <!-- multiselect subareas-->
+                                    </div>
                                 </div>
-                                <div class="col s1"> 
-                                    <p>
-                                        <input type="checkbox" id="checkdata" value="1"/>
-                                        <label for="checkdata">Data</label>
-                                    </p>
+                                <div class="input-field col s1 center">
+                                    <a class="btn-floating waves-effect waves-light green darken-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Ordenar" name="BtnOrder" id="BtnOrder" style="display: none;"><i class="material-icons">format_list_bulleted</i></a>
+                                </div>
+                                <div class="input-field col s1">
+                                    <a class="btn-floating waves-effect waves-light black darken-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="Limpar" name="BtnClear" id="BtnClear" style="display: none;"><i class="material-icons">clear</i></a>
                                 </div>
                             </div>
                         </div>
@@ -267,6 +279,50 @@ include 'configs/config.php'; //meta DB
             });
         },
 
+        orderButton: function () {
+            var subareas = $('#multiple_filhos').val();
+            //alert(subareas);
+
+            $.ajax({
+                type: "POST",
+                data: {subareas: subareas},
+                url: 'php/Assistencias/tableOrder.php',
+                success: function (response) {
+                    $('#tableContainer').html(response);
+
+                    //alert(response);
+                },
+                error: function () {
+                    alert(gestaoAssistencia.MensagemErro);
+                }
+            })
+            
+        },
+
+        selectArea: function () {
+            var id_area_mae = $("#area").val();
+            //alert(id_area);
+
+            $.ajax({
+                type: "POST",
+                data: {id_area_mae: id_area_mae},
+                url: 'php/Assistencias/selectSubareas.php',
+                success: function (response) {
+                    $('#select_subarea').html(response);
+                    $('#BtnOrder').show();
+                    $('#BtnClear').show();
+                    //alert(response);
+                },
+                error: function () {
+                    alert(gestaoAssistencia.MensagemErro);
+                }
+            })
+        },
+        
+        clearButton: function() {
+          location.reload(true);
+        },
+
         init: function () {
 
             $('.tooltipped').tooltip({delay: 50});
@@ -307,6 +363,18 @@ include 'configs/config.php'; //meta DB
             gestaoAssistencia.guardarModalAssign();
         });
 
+        $("#BtnOrder").click(function () {
+            gestaoAssistencia.orderButton();
+        });
+
+        $("#area").change(function () {
+            gestaoAssistencia.selectArea();
+        });
+
+        $("#BtnClear").click(function () {
+            gestaoAssistencia.clearButton();
+        });
+
         $(document).on("click", "a[name='BtnInfo']", function () {
             var info_this = $(this);
             gestaoAssistencia.infoButton(info_this);
@@ -329,8 +397,16 @@ include 'configs/config.php'; //meta DB
             $("#tableAssist tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
                 $(this).hide();
             });
+            
+            $("#tableOrder tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                $(this).hide();
+            });
 
             $("#tableAssist tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                $(this).show();
+            });
+            
+            $("#tableOrder tbody tr:containsi('" + searchSplit + "')").each(function (e) {
                 $(this).show();
             });
 

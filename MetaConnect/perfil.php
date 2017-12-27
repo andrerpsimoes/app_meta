@@ -46,9 +46,9 @@ include 'configs/config.php'; //meta DB
                                                 <span class="card-title activator grey-text text-darken-4"><b><?php echo $_SESSION["nome"]; ?></b></span>
                                             </div>
                                             <h5> <?php echo $_SESSION["departamento"]; ?></h5>
-                                            <h5> <?php echo $_SESSION["mail"]; ?></h5>
                                             <h5> <?php echo $_SESSION["telemovel"]; ?></h5>
-
+                                            <h5> <?php echo $_SESSION["mail_metaveiro"]; ?></h5>
+                                            <h5> <?php echo $_SESSION["mail_gmail"]; ?></h5>
                                         </div>
                                     </div>
                                 </div>

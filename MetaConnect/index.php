@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // database query
 
-    $query = $conn_meta->prepare("select id, nome , tipoconta, mail, foto, departamento, telemovel from login where username='" . $myusername . "' and pass='" . $mypassword . "'");
+    $query = $conn_meta->prepare("select id, nome , tipoconta, mail_gmail, mail_metaveiro, foto, departamento, telemovel from login where username='" . $myusername . "' and pass='" . $mypassword . "'");
 
     $query->execute();
     $result = $query;
@@ -24,7 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["id"] = $row["id"];
             $_SESSION["nome"] = $row["nome"];
             $_SESSION["tipoconta"] = $row["tipoconta"];
-            $_SESSION["mail"] = $row["mail"];
+            $_SESSION["mail_gmail"] = $row["mail_gmail"];
+            $_SESSION["mail_metaveiro"] = $row["mail_metaveiro"];
             $_SESSION["foto"] = $row["foto"];
             $_SESSION["departamento"] = $row["departamento"];
             $_SESSION["telemovel"] = $row["telemovel"];
@@ -46,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <meta name="msapplication-tap-highlight" content="no">
         <title>ServPro</title>
         <!-- Favicons-->
-        <link rel="icon" href="images/favicon/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" href="images/favicon/servpro_favicon.png" sizes="390x390">
         <!-- Favicons-->
         <link rel="apple-touch-icon-precomposed" href="images/favicon/apple-touch-icon-152x152.png">
         <!-- For iPhone -->
@@ -75,8 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <form class="login-form" method="POST">
                     <div class="row">
                         <div class="input-field col s12 center">
-                            <img src="images/logo/login-logo.png" alt="" class="circle responsive-img valign profile-image-login">
-                            <p class="center login-form-text">ServPro</p>
+                            <img src="images/logo/servpro.png" alt="" class="responsive-img">
                         </div>
                     </div>
                     <div class="row margin">

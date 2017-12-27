@@ -14,8 +14,8 @@
                 <ul class="left">
                     <li>
                         <h1 class="logo-wrapper">
-                            <a href="page-principal.php" class="brand-logo darken-1">
-                                <img src="images/logo/materialize-logo.png">
+                            <a href="page-principal.php" class="brand-logo darken-1" style="padding-top: 5px;">
+                                <img src="images/logo/servpro_white.png" style="vertical-align: middle; height: 50px; width: 50px;">
                                 <span class="logo-text hide-on-med-and-down">ServPro</span>
                             </a>
                         </h1>

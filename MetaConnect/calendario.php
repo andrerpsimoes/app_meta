@@ -1,3 +1,21 @@
+<?php
+
+include("restrito.php");
+
+//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+//iniciada, como ve que nao tem este e redirecionado para a pagina incial
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Refresh:0");
+}
+
+$mail = $_SESSION["mail_gmail"];
+
+$init_mail = explode('@', $mail);
+//$init_mail[0];
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,49 +34,18 @@
 
                 <!-- START CONTENT -->
                 <section id="content">
+                    <div class="container">
+                        <div class="row center">
 
-
-                    
-
-
-
+                            <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;hl=pt_PT&amp;bgcolor=%23FFFFFF&amp;src=<?php echo $init_mail[0];?>%40gmail.com&amp;color=%230e61b9&amp;src=pt.portuguese%23holiday%40group.v.calendar.google.com&amp;color=%230F4B38&amp;ctz=Europe%2FLisbon" style="border-width:0; margin-top: 25px;" width="800" height="525" frameborder="0" scrolling="no"></iframe>
+                        </div>
+                    </div>
 
                 </section>
 
 
-
-
                 <!-- END CONTENT -->
 
-                <!-- Floating Action Button -->
-                <div class="fixed-action-btn " style="bottom: 50px; right: 19px;">
-                    <a class="btn-floating btn-large">
-                        <i class="material-icons">add</i>
-                    </a>
-                    <ul>
-                        <li>
-                            <a href="css-helpers.html" class="btn-floating blue">
-                                <i class="material-icons">help_outline</i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="cards-extended.html" class="btn-floating green">
-                                <i class="material-icons">widgets</i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="app-calendar.html" class="btn-floating amber">
-                                <i class="material-icons">today</i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="app-email.html" class="btn-floating red">
-                                <i class="material-icons">mail_outline</i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- Floating Action Button -->
 
                 <?php include 'php/infogeral/navDireita.php'; ?>
             </div>
