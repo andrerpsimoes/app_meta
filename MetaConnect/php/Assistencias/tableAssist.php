@@ -30,12 +30,30 @@ $tableAssist = '
                                 <tbody>';
 
 
-$statement = $conn_meta->prepare("select id, counter, id_cliente, observacoes, recebido_por, prioridade, data_hora, estado from servico where tipo_servico=2 and is_active=1");
+$statement = $conn_meta->prepare("select s.id, s.counter, s.id_cliente, s.observacoes, s.recebido_por, s.prioridade, s.data_hora, s.estado, cab.CA_Assistencia
+
+from servico s left join Emp_999.dbo.Mov_Venda_Cab cab on s.counter=cab.CA_Assistencia
+
+where s.tipo_servico=2 and s.is_active=1
+order by s.counter desc");
+
+
 $statement->execute();
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($results as $result) {
+    $cor='background-color:';
+    if($result['estado']=='1' && $result['CA_Assistencia']==$result['counter'])
+       $cor .='green;';
+    else if($result['estado']=='0' && $result['CA_Assistencia']==$result['counter'])
+       $cor .='orange;';
+    else if($result['estado']=='1')
+       $cor .= 'yellow;';
+    else
+       $cor .='';
+    
+    
     $tableAssist .= '<tr id="' . $result["id"] . '">
-                    <td class="counter" name="counter" id="counter" style="cursor:pointer;">' . $result["counter"] . '</td>
+                    <td class="counter" name="counter" id="counter" style="cursor:pointer;'. $cor.'">' . $result["counter"] . '</td>
                     <td width="300px;">';
     $result["id_cliente"];
     $sql_cliente = $conn_etica->prepare("select intCodigo, strNome from Tbl_Clientes where intCodigo ='" . $result['id_cliente'] . "'");
