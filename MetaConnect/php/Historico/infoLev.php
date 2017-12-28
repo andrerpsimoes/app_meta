@@ -12,26 +12,20 @@
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
 
-
 $id_servico = $_POST['id_servico'];
-
 
 /*
  * ********** Inicio Querys **************
  */
 
 $servicoDetails = $conn_meta->prepare("select s.data_hora, s.recebido_por, s.pedido_por, s.prioridade, s.observacoes, s.id_cliente, 
-(select id_projeto from projeto_cliente where is_active=1 and id=s.id_proj_cliente) as projeto, s.counter
+(select id_projeto from projeto_cliente where is_active=1 and id=s.id_proj_cliente) as projeto, s.counter, s.local_partida, s.local_chegada,
+s.distancia, s.duracao, s.distanciaAestrada, s.duracaoAestrada
 from servico s
 where s.id=$id_servico");
 
-
 $servicoDetails->execute();
 $servicoDetailsResult = $servicoDetails->fetch();
-/*
-  echo "<pre>";
-  print_r($servicoDetailsResult);
-  echo "</pre>"; */
 
 $datetimeFromSql = $servicoDetailsResult['data_hora'];
 $time = strtotime($datetimeFromSql);
@@ -44,6 +38,13 @@ $recebido_por = $servicoDetailsResult['recebido_por'];
 $pedido_por = $servicoDetailsResult['pedido_por'];
 $prioridade = $servicoDetailsResult['prioridade'];
 $observacoes = $servicoDetailsResult['observacoes'];
+
+$local_partida = $servicoDetailsResult['local_partida'];
+$local_chegada = $servicoDetailsResult['local_chegada'];
+$distancia = $servicoDetailsResult['distancia'];
+$duracao = $servicoDetailsResult['duracao'];
+$distanciaAestrada = $servicoDetailsResult['distanciaAestrada'];
+$duracaoAestrada = $servicoDetailsResult['duracaoAestrada'];
 
 //tipos de prioridade existentes
 if ($servicoDetailsResult[3] == 1) {
@@ -170,7 +171,7 @@ $telefone = $infoClienteResult['strTelefone'];
     </div>
 
     <div class = "row" style="margin-bottom: 7px;">
-        <div class = "input-field col s12">
+        <div class = "input-field col s12" style="word-wrap: break-word;">
             <?php
             echo "<b>Observações : </b>" . $observacoes;
             ?>
@@ -189,7 +190,6 @@ $telefone = $infoClienteResult['strTelefone'];
         $local = $sql_projResult['local'];
         $div_projeto = '';
 
-
         $div_projeto .= '<div class = "row" style="margin-bottom: 7px;">
         <div class = "input-field col s12">
         <div class="input-field" style="width: 100%;float: left;margin-bottom: 7px;">
@@ -207,47 +207,33 @@ $telefone = $infoClienteResult['strTelefone'];
     else {
         $morada = $localidade;
     }
-
-    try {
-        $url = "https://maps.googleapis.com/maps/api/directions/json?origin=%27Arruamento%20D%20Lote%2036,%203854-909%20Albergaria-aVelha%27&destination=" . urlencode($morada) . "&mode=DRIVING&key=AIzaSyA5_PaBAk9nBXye99o6fAyJgb1BrQuegtg";
-
-        $res = file_get_contents($url);
-
-        $json = json_decode($res);
-
-        if ($json->status != 'NOT_FOUND') {
-            ?>
-            <div class = "row" style="margin-bottom: 7px;">
-                <div class = "input-field col s6">
-                    <?php
-                    echo "<b>Local Partida: </b>Metaveiro";
-                    ?>
-                </div>
-                <div class = "input-field col s6">
-                    <?php
-                    echo "<b>Local Chegada: </b>" . $morada;
-                    ?>
-                </div>
-            </div>
-            <div class = "row" style="margin-bottom: 7px;">
-                <div class = "input-field col s6">
-                    <b>Distância: </b>
-                    <?php
-                    echo $json->routes[0]->legs[0]->distance->text != NULL ? $json->routes[0]->legs[0]->distance->text : '0';
-                    ?>
-                </div>
-                <div class = "input-field col s6">
-                    <?php
-                    echo "<b>Duração: </b>" . $json->routes[0]->legs[0]->duration->text;
-                    ?>
-                </div>
-
-            </div>
-            <?php
-        }
-    } catch (Exception $exc) {
-        echo "Não foi possível apresentar";
-    }
     ?>
+    <h5>Informações Sobre a Viagem</h5>
 
+    <div class = "row" style="margin-bottom: 7px;">
+        <div class = "input-field col s6">
+            <?php
+            echo "<b>Local Partida: </b>" . $local_partida;
+            ?>
+        </div>
+        <div class = "input-field col s6">
+            <?php
+            echo "<b>Local Chegada: </b>" . $local_chegada;
+            ?>
+        </div>
+    </div>
+    <div class = "row" style="margin-bottom: 7px;">
+        <div class = "input-field col s6">
+            <b>Distância S/ Autoestrada:</b><?php echo $distancia; ?> 
+        </div>
+        <div class = "input-field col s6">
+            <b>Distância C/ Autoestrada:</b><?php echo $distanciaAestrada; ?>
+        </div>
+        <div class = "input-field col s6">
+            <b>Duração S/ Autoestrada:</b><?php echo $duracao; ?> 
+        </div>
+        <div class = "input-field col s6">
+            <b>Duração C/ Autoestrada:</b><?php echo $duracaoAestrada; ?>
+        </div>
+    </div>
 </form>

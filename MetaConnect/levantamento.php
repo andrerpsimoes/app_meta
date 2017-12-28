@@ -1,48 +1,34 @@
 <?php
-  include("restrito.php");
+include("restrito.php");
 
-  //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
-  //iniciada, como ve que nao tem este e redirecionado para a pagina incial
-  if (isset($_GET['logout'])) {
-  session_destroy();
-  header("Refresh:0");
-  }
-
+//caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
+//iniciada, como ve que nao tem este e redirecionado para a pagina incial
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Refresh:0");
+}
 
 include 'configs/config2.php'; // eticadata DB
 include 'configs/config.php'; //meta DB
-
- 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <?php include 'php/infogeral/header.php'; ?>
     </head>
     <body>
         <?php include 'php/infogeral/navSuperior.php'; ?>
 
- <?php include 'php/infogeral/navEsquerda.php'; ?>
+        <?php include 'php/infogeral/navEsquerda.php'; ?>
         <div id="main">
             <!-- START WRAPPER -->
             <div class="wrapper">
-
-               
-
                 <!-- START CONTENT -->
                 <section id="content">
                     <div class="container">
-
-
                         <div class="row">
-                            
                             <h3 class="center">Levantamento</h3>
-                            
                             <form class="col s12" method="POST" id="formId" style=" margin-bottom: 50px;">
-
                                 <div class="row">
                                     <div class="col s12">
                                         <div class="row">
@@ -71,17 +57,17 @@ include 'configs/config.php'; //meta DB
                                 <div class="row">
                                     <div class="input-field col s4">
                                         <i class="material-icons prefix" style="color: lightgray;">call</i>
-                                        <input id="telefone" name="telefone" type="text" placeholder="" class="validate" readonly>
+                                        <input id="telefone" name="telefone" type="text" placeholder="" readonly>
                                         <label for="first_name">Telefone</label>
                                     </div>
                                     <div class="input-field col s4">
                                         <i class="material-icons prefix" style="color: lightgray;">label_outline</i>
-                                        <input id="cod_postal" name="cod_postal" type="text" placeholder="" class="validate" readonly>
+                                        <input id="cod_postal" name="cod_postal" type="text" placeholder="" readonly>
                                         <label for="first_name">Código Postal</label>
                                     </div>
                                     <div class="input-field col s4">
                                         <i class="material-icons prefix" style="color: lightgray;">assignment_ind</i>
-                                        <input id="contribuinte" name="contribuinte" type="text" placeholder="" class="validate" readonly>
+                                        <input id="contribuinte" name="contribuinte" type="text" placeholder="" readonly>
                                         <label for="first_name">Contribuinte</label>
                                     </div>
                                 </div>
@@ -89,7 +75,7 @@ include 'configs/config.php'; //meta DB
                                 <div class="row">
                                     <div class="input-field col s4">
                                         <i class="material-icons prefix">perm_identity</i>
-                                        <input id="pedidopor" type="text" class="validate" required>
+                                        <input id="pedidopor" type="text" class="validate" maxlength="40" required>
                                         <label for="icon_prefix">Pedido por:</label>
                                     </div>
                                     <div class="input-field col s4">
@@ -116,24 +102,16 @@ include 'configs/config.php'; //meta DB
                                                 Sim
                                             </label>
                                         </div>
-                                        
-                                        <div id="divselectproj" style="display: none;">
-                                            <div class="col s4">
-                                                <div class="form-select" id="selectproj" >
-                                                </div>
+                                        <div class="col s4">
+                                            <div class="form-select" id="selectproj" style="display: none;">
                                             </div>
-
-                                            <div class="col s4">
-                                                <a class="btn-floating waves-effect waves-light tooltipped" data-position="bottom" data-delay="5" data-tooltip="Criar Projeto" id="BtnProj">
-                                                    <i class="material-icons">add</i></a>
-                                            </div>
+                                        </div>
+                                        <div class="col s4">
+                                            <a class="btn-floating waves-effect waves-light tooltipped" data-position="bottom" data-delay="5" data-tooltip="Criar Projeto" id="BtnProj" style="display: none;">
+                                                <i class="material-icons">add</i></a>
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
 
                                 <div class="row">
                                     <div class="col s12">
@@ -318,7 +296,6 @@ include 'configs/config.php'; //meta DB
                                                 </div>
                                             </li>
                                         </ul>
-
                                     </div>
                                 </div>
 
@@ -337,11 +314,9 @@ include 'configs/config.php'; //meta DB
                                         </a>
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                     </div>
-
                 </section>
 
                 <?php include 'php/infogeral/navDireita.php'; ?>
@@ -351,8 +326,6 @@ include 'configs/config.php'; //meta DB
         <!-- Modal Structure -->
         <section id="content">
             <div class="container">
-
-
                 <div class="row">
                     <div id="modal1" class="modal ">
                         <div class="modal-content">
@@ -419,22 +392,21 @@ include 'configs/config.php'; //meta DB
 
         <script>
 
-            var levantamento={
-                
-              //********variaveis globais********
-                
-              MensagemErro:"Ocorreu um erro, por favor contacte o administrador do sistema.",  
-                
-                
-              //********Fim variaveis globais********
-                
-              atualizaProjetos: function (){
-                  
-                    if ($('#proj_check:checkbox:checked').length>0) {
+            var levantamento = {
+
+                //********variaveis globais********
+
+                MensagemErro: "Ocorreu um erro, por favor contacte o administrador do sistema.",
+
+                //********Fim variaveis globais********
+
+                atualizaProjetos: function () {
+
+                    if ($('#proj_check:checkbox:checked').length > 0) {
                         var cliente = $("#autocomplete-input").val(),
-                            data_to_select = {
-                                id_cliente: cliente.substr(0, cliente.indexOf(' '))
-                            };
+                                data_to_select = {
+                                    id_cliente: cliente.substr(0, cliente.indexOf(' '))
+                                };
 
                         $.ajax({
                             type: "POST",
@@ -448,17 +420,16 @@ include 'configs/config.php'; //meta DB
                             }
                         });
                     }
-                  
-                  
-              },
-              //botao de submit
-                butaoSubmit: function(){
+                },
+                //botao de submit
+                butaoSubmit: function () {
                     var selected = [],
                         cliente = $("#autocomplete-input").val();
-                    $('#accordion input:checked').each(function() {
+                    
+                    $('#accordion input:checked').each(function () {
                         selected.push($(this).attr('value'));
                     });
-                    
+
                     var dados = {
                         id_cliente: cliente.substr(0, cliente.indexOf(' ')),
                         pedido_por: $("#pedidopor").val(),
@@ -479,46 +450,49 @@ include 'configs/config.php'; //meta DB
                                     pedido_por: $("#pedidopor").val(),
                                     prioridade: $("#prioridade").val(),
                                     observacoes: $("#observacoes").val(),
-                                    selecionados: selected
+                                    selecionados: selected,
+                                    cod_postal: $("#cod_postal").val(),
+                                    morada: $("#morada").val(),
+                                    localidade: $("#localidade").val()
                                 };
                         $.ajax({
                             type: "POST",
                             data: data,
                             url: 'php/Levantamentos/insertLevant.php',
                             success: function (response) {
-                                debugger;
                                 var arr = $.parseJSON(response);
                                 window.open('http://localhost:82/1904/MetaConnect/php/levantamentos/pdfLevantamento.php?a=' + arr.id_levantamento, '_blank');
+                                location.reload();
                             },
                             error: function () {
                                 alert(levantamento.MensagemErro);
                             }
                         });
-                        
-                        $("#formId")[0].reset();
-                        if ($('#proj_check:checkbox:checked').length>0) {
-                            $('#divselectproj').show();
-                        } else {
-                           $('#divselectproj').hide();
-                        }
-
+                        /*
+                         $("#formId")[0].reset();
+                         if ($('#proj_check:checkbox:checked').length>0) {
+                         $('#divselectproj').show();
+                         } else {
+                         $('#divselectproj').hide();
+                         }*/
                     }
                 },
-                
-                inputChange:function() {
-                    
-                   if ($('#proj_check:checkbox:checked').length>0) {
-                       $('#divselectproj').show();
+
+                inputChange: function () {
+
+                    if ($('#proj_check:checkbox:checked').length > 0) {
+                        $('#selectproj').toggle(this.checked);
+                        $('#BtnProj').toggle();
                     } else {
-                       $('#divselectproj').hide();
+                        $('#selectproj').toggle();
+                        $('#BtnProj').toggle();
                     }
 
                     levantamento.atualizaProjetos(); //chamamos a funcao de atualizar projetos
-
                 },
-                
-                botaoModal: function() {
-                      var dados_modal = {
+
+                botaoModal: function () {
+                    var dados_modal = {
                         descricao: $("#descricao").val(),
                         pessoa_responsavel: $("#pessoa_responsavel").val(),
                         contacto_responsavel: $("#contacto_responsavel").val(),
@@ -530,14 +504,14 @@ include 'configs/config.php'; //meta DB
                     } else {
 
                         var cliente = $("#autocomplete-input").val(),
-                            info_modal = {
-                                id_cliente: cliente.substr(0, cliente.indexOf(' ')),
-                                descricao: $("#descricao").val(),
-                                pessoa_responsavel: $('#pessoa_responsavel').val(),
-                                contacto_responsavel: $('#contacto_responsavel').val(),
-                                local: $('#local').val()
-                            };
-                        
+                                info_modal = {
+                                    id_cliente: cliente.substr(0, cliente.indexOf(' ')),
+                                    descricao: $("#descricao").val(),
+                                    pessoa_responsavel: $('#pessoa_responsavel').val(),
+                                    contacto_responsavel: $('#contacto_responsavel').val(),
+                                    local: $('#local').val()
+                                };
+
                         $.ajax({
                             type: "POST",
                             data: info_modal,
@@ -560,86 +534,77 @@ include 'configs/config.php'; //meta DB
                         });
                     }
                 },
-                
-                botaoProjeto: function (){
-                    
+
+                botaoProjeto: function () {
+
                     var valortextCliente = $("#autocomplete-input").val(),
-                        idcliente=valortextCliente.substr(0, valortextCliente.indexOf(' '));
-                   
+                            idcliente = valortextCliente.substr(0, valortextCliente.indexOf(' '));
+
                     if (!idcliente) {
                         Materialize.toast('Preencha corretamento o campo cliente!', 3000, 'rounded');
                     } else {
                         $('#modal1').modal('open');
                     }
                 },
-                
-                
-                init:function (){
-                    
+
+                init: function () {
+
                     $('select').material_select();
                     $('#modal1').modal();
                     $('#BtnProj').tooltip({delay: 50});
                     $('.collapsible').collapsible();
                     $('textarea').characterCounter();
 
-                
+
                     $.ajax({
-                        url:"php/getClientes.php",
+                        url: "php/getClientes.php",
                         dataType: "json",
                         success: function (pData) {
 
                             var jsonObj = {};
 
-                            for (var i=0; i< pData.length; i++){
+                            for (var i = 0; i < pData.length; i++) {
 
-                                jsonObj[pData[i]["intCodigo"]+" - "+pData[i]["strNome"]] = null;
+                                jsonObj[pData[i]["intCodigo"] + " - " + pData[i]["strNome"]] = null;
                             }
 
                             $('#autocomplete-input').autocomplete({
                                 data: jsonObj,
                                 limit: 5,
-                                 onAutocomplete: function(val) {
-                                     var id_cliente =val.substr(0,val.indexOf(' '));
-                                      
-                                       $.ajax({
+                                onAutocomplete: function (val) {
+                                    var id_cliente = val.substr(0, val.indexOf(' '));
 
-                                               type: "POST",
-                                               data: { id_cliente : id_cliente },
-                                               url:'php/getInfoCliente.php',
-                                                success: function (response) {
-                                                   
-                                                   var arr = $.parseJSON(response);
-                                                   $("#morada").val(arr[0].strMorada_lin1);
-                                                   $("#localidade").val(arr[0].strLocalidade);
-                                                   $("#cod_postal").val(arr[0].strPostal);
-                                                   $("#contribuinte").val(arr[0].strNumContrib);
-                                                   $("#telefone").val(arr[0].strTelefone);
-                                                   levantamento.atualizaProjetos();
-                                               },
-                                               error: function () {
-                                                  alert(levantamento.MensagemErro);
-                                               }
-                                       });
+                                    $.ajax({
 
+                                        type: "POST",
+                                        data: {id_cliente: id_cliente},
+                                        url: 'php/getInfoCliente.php',
+                                        success: function (response) {
+
+                                            var arr = $.parseJSON(response);
+                                            $("#morada").val(arr[0].strMorada_lin1);
+                                            $("#localidade").val(arr[0].strLocalidade);
+                                            $("#cod_postal").val(arr[0].strPostal);
+                                            $("#contribuinte").val(arr[0].strNumContrib);
+                                            $("#telefone").val(arr[0].strTelefone);
+                                            levantamento.atualizaProjetos();
+                                        },
+                                        error: function () {
+                                            alert(levantamento.MensagemErro);
+                                        }
+                                    });
                                 }
                             });
                         }
                     });
-
                 }
-                
             };
-
-
-
 
             $(document).ready(function () {
 
-        
                 levantamento.init();
-           
 
-                $('#BtnProj').click(function (){
+                $('#BtnProj').click(function () {
                     levantamento.botaoProjeto();
                 });
 
@@ -647,22 +612,15 @@ include 'configs/config.php'; //meta DB
                     levantamento.inputChange(e);
                 });
 
-
                 $("#BtnModal").click(function () {
-                   levantamento.botaoModal();
+                    levantamento.botaoModal();
                 });
-
 
                 $("#BtnAssist").click(function () {
-                   levantamento.butaoSubmit();
+                    levantamento.butaoSubmit();
                 });
-
-
-
-
             });
-            
-        </script>
 
+        </script>
     </body>
 </html>

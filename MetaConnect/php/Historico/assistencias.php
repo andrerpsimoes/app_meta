@@ -31,13 +31,29 @@ $assistencias_cliente = '
                                 <tbody>';
 
 
-$statement = $conn_meta->prepare("select id, id_cliente, counter, pedido_por, observacoes, recebido_por, prioridade, data_hora, estado from servico where id_cliente='" . $id_cliente . "' and tipo_servico=2 and is_active=1");
+$statement = $conn_meta->prepare("select s.id, s.id_cliente, s.pedido_por, s.counter, s.observacoes, s.recebido_por, s.prioridade, s.data_hora, s.estado, cab.CA_Assistencia
+from servico s
+left join Emp_999.dbo.Mov_Venda_Cab cab on s.counter=cab.CA_Assistencia
+where s.id_cliente='" . $id_cliente . "' and s.tipo_servico=2 and s.is_active=1
+order by s.counter desc");
+
 $statement->execute();
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($results as $result) {
+
+    $cor = 'background-color:';
+    if ($result['estado'] == '1' && $result['CA_Assistencia'] == $result['counter'])
+        $cor .= 'green;';
+    else if ($result['estado'] == '0' && $result['CA_Assistencia'] == $result['counter'])
+        $cor .= 'orange;';
+    else if ($result['estado'] == '1')
+        $cor .= 'yellow;';
+    else
+        $cor .= '';
+
     $assistencias_cliente .= '<tr id="' . $result["id"] . '">
-                    <td class="counter" name="counter" id="counter" style="cursor:pointer;">' . $result["counter"] . '</td>
-                    <td>'. $result["pedido_por"].'</td>';
+                    <td class="counter" name="counter" id="counter" style="' . $cor . '">' . $result["counter"] . '</td>
+                    <td>' . $result["pedido_por"] . '</td>';
 
     $textobs = $result["observacoes"];
     $tamanhoObs = strlen($textobs);

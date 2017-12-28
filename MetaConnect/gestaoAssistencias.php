@@ -22,6 +22,7 @@ $areas = $sql_areas->fetchAll();
         <?php include 'php/infogeral/header.php'; ?>
     </head>
     <body>
+        
         <?php include 'php/infogeral/navSuperior.php'; ?>
 
         <?php include 'php/infogeral/navEsquerda.php'; ?>
@@ -289,13 +290,11 @@ $areas = $sql_areas->fetchAll();
                 url: 'php/Assistencias/tableOrder.php',
                 success: function (response) {
                     $('#tableContainer').html(response);
-
-                    //alert(response);
                 },
                 error: function () {
                     alert(gestaoAssistencia.MensagemErro);
                 }
-            })
+            });
             
         },
 
@@ -306,7 +305,7 @@ $areas = $sql_areas->fetchAll();
             $.ajax({
                 type: "POST",
                 data: {id_area_mae: id_area_mae},
-                url: 'php/Assistencias/selectSubareas.php',
+                url: 'php/infogeral/selectSubareas.php',
                 success: function (response) {
                     $('#select_subarea').html(response);
                     $('#BtnOrder').show();
@@ -316,7 +315,7 @@ $areas = $sql_areas->fetchAll();
                 error: function () {
                     alert(gestaoAssistencia.MensagemErro);
                 }
-            })
+            });
         },
         
         clearButton: function() {

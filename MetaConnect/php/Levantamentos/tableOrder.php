@@ -37,8 +37,8 @@ if (isset($_POST['subareas'])) {
             . "from servico_area sa "
             . "inner join servico as s on s.id = sa.id_servico "
             . "left join Emp_999.dbo.Mov_Venda_Cab cab on s.counter=cab.CA_Assistencia "
-            . "where  s.tipo_servico = 2 and s.is_active=1 and";
-
+            . "where  s.tipo_servico = 1 and s.is_active=1 and";
+    
     $i = 0;
     $len = count($subareas);
     foreach ($subareas as $key => $value) {
@@ -58,7 +58,7 @@ if (isset($_POST['subareas'])) {
 
 
     foreach ($results as $result) {
-
+        
         $cor = 'background-color:';
         if ($result['estado'] == '1' && $result['CA_Assistencia'] == $result['counter'])
             $cor .= 'green;';
@@ -68,8 +68,8 @@ if (isset($_POST['subareas'])) {
             $cor .= 'yellow;';
         else
             $cor .= '';
-
-
+        
+        
         $tableOrder .= '<tr id="' . $result["id"] . '">
                     <td class="counter" name="counter" id="counter" style="cursor:pointer;'. $cor.'">' . $result["counter"] . '</td>
                     <td width="300px;">';

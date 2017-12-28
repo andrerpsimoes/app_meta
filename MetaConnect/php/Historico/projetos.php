@@ -30,7 +30,7 @@ $projeto_cliente = '
 
 
 $statement = $conn_meta->prepare("select id_projeto, p.descricao, p.contacto_responsavel, p.local, p.responsavel "
-        . "from projeto_cliente as pc inner join projeto as p on p.id = pc.id_projeto where pc.id_cliente= '" . $id_cliente . "'");
+        . "from projeto_cliente as pc inner join projeto as p on p.id = pc.id_projeto where pc.id_cliente= '" . $id_cliente . "' order by id_projeto desc");
 $statement->execute();
 $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
