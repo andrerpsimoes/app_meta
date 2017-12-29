@@ -28,10 +28,40 @@ $sql_tecnicos = $conn_etica->prepare("SELECT Tbl_Grh_Funcionarios.intCodigo AS c
 $sql_tecnicos->execute();
 $tecnicos = $sql_tecnicos->fetchAll();
 
-$sql_tec_assist = $conn_meta->prepare("select id_tecnico from tecnico_servico where id_servico='" . $id_servico . "'");
+$sql_tec_assist = $conn_meta->prepare("select id_tecnico, data_inicio, data_fim from tecnico_servico where id_servico='" . $id_servico . "'");
 $sql_tec_assist->execute();
 $tecnicos_assistencia = $sql_tec_assist->fetchAll();
 
+//se já existir algum tecn atribuido e datas
+if (!empty($tecnicos_assistencia)) {
+
+//Data BD
+    foreach ($tecnicos_assistencia as $tecnicos_assist) {
+        $tecnicos_assist['data_inicio'] . '<br>';
+        $tecnicos_assist['data_fim'];
+    }
+
+    $datetimeFromSql_ini = $tecnicos_assist['data_inicio'];
+    $time_ini = strtotime($datetimeFromSql_ini);
+    $myFormatForView_ini = date("Y/m/d H:i", $time_ini);
+
+    $data_ini = explode(' ', $myFormatForView_ini);
+    $dia_ini = $data_ini[0];
+    $hora_ini = $data_ini[1];
+
+    $datetimeFromSql_fin = $tecnicos_assist['data_fim'];
+    $time_fin = strtotime($datetimeFromSql_fin);
+    $myFormatForView_fin = date("Y/m/d H:i", $time_fin);
+
+    $data_fin = explode(' ', $myFormatForView_fin);
+    $dia_fin = $data_fin[0];
+    $hora_fin = $data_fin[1];
+} else {
+    $dia_ini = '';
+    $hora_ini = '';
+    $dia_fin = '';
+    $hora_fin = '';
+}
 $todos_ids_tec = array();
 $todos_ids_assi = array();
 
@@ -60,7 +90,7 @@ $ids_tecnicos_escolhidos = array_intersect($todos_ids_tec, $todos_ids_assi); //d
         <div class="input-field col s12">
             <i class="material-icons prefix">person_add</i>
             <select multiple name="tecnicos" id="tecnicos">
-                <option disabled>Choose your option</option>
+                <option disabled>Escolha o(s) Técnico(s)</option>
                 <?php
                 foreach ($tecnicos as $tecnico) {
                     echo '<option value="' . $tecnico['codigo'] . '"' . (in_array($tecnico['codigo'], $ids_tecnicos_escolhidos) ? 'selected="selected"' : '') . '>' . $tecnico['nome'] . '</option>';
@@ -74,12 +104,22 @@ $ids_tecnicos_escolhidos = array_intersect($todos_ids_tec, $todos_ids_assi); //d
 
     <div class="row">
         <div class="col s6">
-            <label for="icon_prefix">Dia</label>
-            <input type="text" class="datepicker" id="day">
+            <label for="icon_prefix">Dia Inicial</label>
+            <input type="text" class="datepicker" id="day_ini" value="<?php echo $dia_ini; ?>">
         </div>
         <div class="col s6">
-            <label for="icon_prefix">Hora</label>
-            <input type="text" class="timepicker" id="hour">
+            <label for="icon_prefix">Hora Inicial</label>
+            <input type="text" class="timepicker" id="hour_ini" value="<?php echo $hora_ini; ?>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s6">
+            <label for="icon_prefix">Dia Final</label>
+            <input type="text" class="datepicker" id="day_fin" value="<?php echo $dia_fin; ?>">
+        </div>
+        <div class="col s6">
+            <label for="icon_prefix">Hora Final</label>
+            <input type="text" class="timepicker" id="hour_fin" value="<?php echo $hora_fin; ?>">
         </div>
     </div>
 

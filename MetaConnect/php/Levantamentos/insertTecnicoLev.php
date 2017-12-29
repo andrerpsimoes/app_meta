@@ -15,10 +15,13 @@ include '../../configs/config2.php'; // eticadata DB
 
 $id_servico = $_POST['id_servico'];
 $id_tecnicos_novos = $_POST['tecnicos_selecionados'];
-$hora = $_POST['hora'];
-$dia = $_POST['dia'];
+$hora_ini = $_POST['hora_ini'];
+$dia_ini = $_POST['dia_ini'];
+$hora_fin = $_POST['hora_fin'];
+$dia_fin = $_POST['dia_fin'];
 
-$datetime = $dia . ' ' . $hora;
+$datetime_ini = $dia_ini . ' ' . $hora_ini;
+$datetime_fin = $dia_fin . ' ' . $hora_fin;
 
 //echo $datetime;
 if (empty($id_tecnicos_novos)) {
@@ -55,14 +58,14 @@ $ids_to_insert = array_diff($novos, $existentes);
 if (isset($id_tecnicos_novos) && empty($select_existentes)) {
 
 
-    $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico, data) VALUES";
+    $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico, data_inicio, data_fim) VALUES";
     $i = 0;
     $len = count($id_tecnicos_novos);
     foreach ($id_tecnicos_novos as $tecnicos) {
         if ($i == $len - 1) {
-            $insert_servicoTecnico .= "($tecnicos,$id_servico, '$datetime')";
+            $insert_servicoTecnico .= "($tecnicos,$id_servico, '$datetime_ini', '$datetime_fin')";
         } else {
-            $insert_servicoTecnico .= "($tecnicos,$id_servico, '$datetime'),";
+            $insert_servicoTecnico .= "($tecnicos,$id_servico, '$datetime_ini', '$datetime_fin'),";
         }
         $i++;
     }
@@ -97,14 +100,14 @@ if (isset($id_tecnicos_novos) && empty($select_existentes)) {
 
     $len = count($ids_to_insert);
     if ($len >= 1) {
-        $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico, data) VALUES";
+        $insert_servicoTecnico = "INSERT INTO tecnico_servico(id_tecnico, id_servico, data_inicio, data_fim) VALUES";
         $i = 0;
 
         foreach ($ids_to_insert as $insert) {
             if ($i == $len - 1) {
-                $insert_servicoTecnico .= "($insert,$id_servico, '$datetime')";
+                $insert_servicoTecnico .= "($insert,$id_servico, '$datetime_ini', '$datetime_fin')";
             } else {
-                $insert_servicoTecnico .= "($insert,$id_servico, '$datetime'),";
+                $insert_servicoTecnico .= "($insert,$id_servico, '$datetime_ini', '$datetime_fin'),";
             }
             $i++;
         }

@@ -253,23 +253,26 @@ $areas = $sql_areas->fetchAll();
             $('#assign_modal #tecnicos option:checked').each(function () {
                 selected.push($(this).attr('value'));
             });
-            var dia = $("#assign_modal #day").val();
-            var hora = $("#assign_modal #hour").val();
-            //alert(hora);
+            var dia_ini = $("#assign_modal #day_ini").val();
+            var hora_ini = $("#assign_modal #hour_ini").val();
+            var dia_fin = $("#assign_modal #day_fin").val();
+            var hora_fin = $("#assign_modal #hour_fin").val();
 
             dados_serv_tec = {
                 id_servico: gestaoLevantamento.idservico,
                 tecnicos_selecionados: selected,
-                dia: dia,
-                hora: hora
+                dia_ini: dia_ini,
+                hora_ini: hora_ini,
+                dia_fin: dia_fin,
+                hora_fin: hora_fin
             };
             $.ajax({
                 type: "POST",
                 data: dados_serv_tec,
                 url: 'php/Levantamentos/insertTecnicoLev.php',
                 success: function (response) {
-
-                    Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
+                    alert(response);
+                    //Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
                 },
                 error: function () {
                     alert(gestaoLevantamento.MensagemErro);
