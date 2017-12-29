@@ -1,4 +1,5 @@
 <?php
+include("restrito.php");
 include 'configs/config2.php'; // eticadata DB
 include 'configs/config.php'; //meta DB
 /*

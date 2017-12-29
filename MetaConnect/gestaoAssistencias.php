@@ -22,7 +22,7 @@ $areas = $sql_areas->fetchAll();
         <?php include 'php/infogeral/header.php'; ?>
     </head>
     <body>
-        
+
         <?php include 'php/infogeral/navSuperior.php'; ?>
 
         <?php include 'php/infogeral/navEsquerda.php'; ?>
@@ -173,7 +173,6 @@ $areas = $sql_areas->fetchAll();
                     $.ajax({
                         url: 'php/Assistencias/tableAssist.php',
                         success: function (response) {
-                            debugger;
                             $('#tableContainer').html(response);
                             Materialize.toast('Assistência editada com sucesso!', 3000, 'rounded');
                         },
@@ -200,7 +199,6 @@ $areas = $sql_areas->fetchAll();
                     $.ajax({
                         url: 'php/Assistencias/tableAssist.php',
                         success: function (response) {
-                            debugger;
                             $('#tableContainer').html(response);
                             Materialize.toast('Assistência eliminada com sucesso!', 3000, 'rounded');
                         },
@@ -235,6 +233,56 @@ $areas = $sql_areas->fetchAll();
             });
             $('#info_modal').modal('open');
         },
+
+        guardarModalInfo: function () {
+            var idservico = gestaoAssistencia.idservico;
+            var check = $('#checkAssist').is(':checked');
+            if (check == true) {
+
+                $.ajax({
+                    type: "POST",
+                    data: {id_servico: idservico},
+                    url: 'php/Assistencias/concludedAssist.php',
+                    success: function (response) {
+                        $.ajax({
+                            url: 'php/Assistencias/tableAssist.php',
+                            success: function (response) {
+                                $('#tableContainer').html(response);
+                                Materialize.toast('Assistência concluída!', 3000, 'rounded');
+                            },
+                            error: function () {
+                                alert(gestaoAssistencia.MensagemErro);
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert(gestaoAssistencia.MensagemErro);
+                    }
+                });
+            } else {
+               $.ajax({
+                    type: "POST",
+                    data: {id_servico: idservico},
+                    url: 'php/Assistencias/notConcludedAssist.php',
+                    success: function (response) {
+                        $.ajax({
+                            url: 'php/Assistencias/tableAssist.php',
+                            success: function (response) {
+                                $('#tableContainer').html(response);
+                                Materialize.toast('Assistência atualizada!', 3000, 'rounded');
+                            },
+                            error: function () {
+                                alert(gestaoAssistencia.MensagemErro);
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert(gestaoAssistencia.MensagemErro);
+                    }
+                });
+            }
+        },
+
         atribuirServico: function (id_this) {
             gestaoAssistencia.idservico = id_this.closest('tr').attr('id');
             $.ajax({
@@ -274,8 +322,7 @@ $areas = $sql_areas->fetchAll();
                 url: 'php/Assistencias/insertTecnicoAssist.php',
                 success: function (response) {
 
-                    alert(response);
-                    //Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
+                    Materialize.toast('Técnico(s) atribuidos!', 3000, 'rounded');
                 },
                 error: function () {
                     alert(gestaoAssistencia.MensagemErro);
@@ -285,7 +332,6 @@ $areas = $sql_areas->fetchAll();
 
         orderButton: function () {
             var subareas = $('#multiple_filhos').val();
-            //alert(subareas);
 
             $.ajax({
                 type: "POST",
@@ -298,7 +344,7 @@ $areas = $sql_areas->fetchAll();
                     alert(gestaoAssistencia.MensagemErro);
                 }
             });
-            
+
         },
 
         selectArea: function () {
@@ -320,9 +366,9 @@ $areas = $sql_areas->fetchAll();
                 }
             });
         },
-        
-        clearButton: function() {
-          location.reload(true);
+
+        clearButton: function () {
+            location.reload(true);
         },
 
         init: function () {
@@ -365,6 +411,10 @@ $areas = $sql_areas->fetchAll();
             gestaoAssistencia.guardarModalAssign();
         });
 
+        $("#guardarInfoButton").click(function () {
+            gestaoAssistencia.guardarModalInfo();
+        });
+
         $("#BtnOrder").click(function () {
             gestaoAssistencia.orderButton();
         });
@@ -399,7 +449,7 @@ $areas = $sql_areas->fetchAll();
             $("#tableAssist tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
                 $(this).hide();
             });
-            
+
             $("#tableOrder tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
                 $(this).hide();
             });
@@ -407,7 +457,7 @@ $areas = $sql_areas->fetchAll();
             $("#tableAssist tbody tr:containsi('" + searchSplit + "')").each(function (e) {
                 $(this).show();
             });
-            
+
             $("#tableOrder tbody tr:containsi('" + searchSplit + "')").each(function (e) {
                 $(this).show();
             });

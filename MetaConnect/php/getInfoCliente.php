@@ -1,4 +1,6 @@
 <?php
+include("../../restrito.php");
+
      $id_cliente = $_POST['id_cliente'];
      
      include '../configs/config2.php';

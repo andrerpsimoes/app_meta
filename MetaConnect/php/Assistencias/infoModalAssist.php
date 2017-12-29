@@ -1,13 +1,12 @@
 <?php
-/*
-  include("restrito.php");
+  include("../../restrito.php");
 
   //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
   //iniciada, como ve que nao tem este e redirecionado para a pagina incial
   if (isset($_GET['logout'])) {
   session_destroy();
   header("Refresh:0");
-  } */
+  } 
 
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
@@ -18,7 +17,7 @@ $id_servico = $_POST['id_servico'];
  * ********** Inicio Querys **************
  */
 
-$servicoDetails = $conn_meta->prepare("select s.data_hora, s.recebido_por, s.pedido_por, s.prioridade, s.observacoes, s.id_cliente, 
+$servicoDetails = $conn_meta->prepare("select s.data_hora, s.recebido_por, s.pedido_por, s.prioridade, s.observacoes, s.id_cliente, s.estado,
 (select id_projeto from projeto_cliente where is_active=1 and id=s.id_proj_cliente) as projeto, s.counter, s.local_partida, s.local_chegada,
 s.distancia, s.duracao, s.distanciaAestrada, s.duracaoAestrada
 from servico s
@@ -38,6 +37,7 @@ $recebido_por = $servicoDetailsResult['recebido_por'];
 $pedido_por = $servicoDetailsResult['pedido_por'];
 $prioridade = $servicoDetailsResult['prioridade'];
 $observacoes = $servicoDetailsResult['observacoes'];
+$estado = $servicoDetailsResult['estado'];
 
 $local_partida = $servicoDetailsResult['local_partida'];
 $local_chegada = $servicoDetailsResult['local_chegada'];
@@ -123,7 +123,7 @@ $telefone = $infoClienteResult['strTelefone'];
             $stat->execute();
             $results_meta = $stat->fetchAll(PDO::FETCH_ASSOC);
 
-            echo "<b>Área(s) : </b>";
+            echo "<b>Área(s): </b>";
             if ($results_meta) {
 
                 $seg_ele = array();
@@ -172,10 +172,37 @@ $telefone = $infoClienteResult['strTelefone'];
     <div class = "row" style="margin-bottom: 7px;">
         <div class = "input-field col s12" style="word-wrap: break-word;">
             <?php
-            echo "<b>Observações : </b>" . $observacoes;
+            echo "<b>Observações: </b>" . $observacoes;
             ?>
         </div>
     </div>
+    <?php
+    $tec_serv = $conn_meta->prepare("SELECT ts.data_inicio, ts.data_fim, ts.id_tecnico, Tbl_Funcionarios.strNome AS nome, 
+SUBSTRING(Tbl_Funcionarios.strNome, 1, CHARINDEX(' ', Tbl_Funcionarios.strNome) - 1)+' '+
+REVERSE(SUBSTRING(REVERSE(Tbl_Funcionarios.strNome), 1, CHARINDEX(' ', REVERSE(Tbl_Funcionarios.strNome)) - 1)) AS PrimeiroUltimo
+FROM Emp_999.dbo.Tbl_Grh_Funcionarios WITH (NOLOCK)
+INNER JOIN Emp_999.dbo.Tbl_Funcionarios WITH (NOLOCK) ON (Emp_999.dbo.Tbl_Grh_Funcionarios.intCodigo=Emp_999.dbo.Tbl_Funcionarios.intCodigo)
+inner join tecnico_servico ts on ts.id_tecnico = Emp_999.dbo.Tbl_Grh_Funcionarios.intCodigo
+where Emp_999.dbo.Tbl_Grh_Funcionarios.strCodExercicio = 'EX 2017' and ts.id_servico = '" . $id_servico . "'
+and Emp_999.dbo.Tbl_Grh_Funcionarios.bitInactivo=0 and Emp_999.dbo.Tbl_Funcionarios.strCodDepartamento='2'
+ORDER BY Emp_999.dbo.Tbl_Grh_Funcionarios.intCodigo");
+    $tec_serv->execute();
+    $tec_servResult = $tec_serv->fetchAll();
+
+    //print_r($tec_servResult);
+    $tecnicos_atribuidos = array();
+    foreach ($tec_servResult as $tecnico_serv) {
+        $tecnicos_atribuidos[] = $tecnico_serv['PrimeiroUltimo'];
+    }
+    ?>
+    <div class = "row" style="margin-bottom: 7px;">
+        <div class = "input-field col s12" style="word-wrap: break-word;">
+            <?php
+            echo "<b>Técnicos Atribuídos: </b>" . implode(", ", $tecnicos_atribuidos);
+            ?>
+        </div>
+    </div>
+
     <?php
     if ($id_projeto) { //caso haja projeto
         $sql_proj = $conn_meta->prepare("select descricao, responsavel, contacto_responsavel, local from projeto where id=$id_projeto and is_active=1");
@@ -206,7 +233,8 @@ $telefone = $infoClienteResult['strTelefone'];
         $morada = $localidade;
     }
     ?>
-    <h5>Informações Sobre a Viagem</h5>
+
+    <h5 style="margin-bottom: 7px;">Informações Sobre a Viagem</h5>
 
     <div class = "row" style="margin-bottom: 7px;">
         <div class = "input-field col s6">
@@ -222,23 +250,23 @@ $telefone = $infoClienteResult['strTelefone'];
     </div>
     <div class = "row" style="margin-bottom: 7px;">
         <div class = "input-field col s6">
-            <b>Distância S/ Autoestrada:</b><?php echo $distancia; ?> 
+            <b>Distância S/ Autoestrada: </b><?php echo $distancia; ?> 
         </div>
         <div class = "input-field col s6">
-            <b>Distância C/ Autoestrada:</b><?php echo $distanciaAestrada; ?>
+            <b>Distância C/ Autoestrada: </b><?php echo $distanciaAestrada; ?>
         </div>
         <div class = "input-field col s6">
-            <b>Duração S/ Autoestrada:</b><?php echo $duracao; ?> 
+            <b>Duração S/ Autoestrada: </b><?php echo $duracao; ?> 
         </div>
         <div class = "input-field col s6">
-            <b>Duração C/ Autoestrada:</b><?php echo $duracaoAestrada; ?>
+            <b>Duração C/ Autoestrada: </b><?php echo $duracaoAestrada; ?>
         </div>
     </div>
 
     <div class = "row" style="margin-bottom: 7px;">
         <div class = "col s11">
             <p>
-                <input type="checkbox" id="checkAssist" value="1"/>
+                <input type="checkbox" id="checkAssist"  <?php echo $estado=='1'?'checked': ''; ?>/>
                 <label for="checkAssist" style="color: black;font-weight: bold;float: right;">Concluída</label>
             </p>
         </div>

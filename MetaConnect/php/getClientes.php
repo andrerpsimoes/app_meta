@@ -1,5 +1,7 @@
 <?php
 
+include("../../restrito.php");
+
 include '../configs/config2.php';
 
 $statement = $conn_etica->prepare("select intCodigo, strNome from Tbl_Clientes");

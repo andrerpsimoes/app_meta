@@ -1,20 +1,19 @@
 <?php
 
-/*
-  include("restrito.php");
+
+  include("../../restrito.php");
 
   //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
   //iniciada, como ve que nao tem este e redirecionado para a pagina incial
   if (isset($_GET['logout'])) {
   session_destroy();
   header("Refresh:0");
-  } */
+  } 
 
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
 
 $id_servico = $_POST['id_servico'];
-$id_tecnicos_novos = $_POST['tecnicos_selecionados'];
 $hora_ini = $_POST['hora_ini'];
 $dia_ini = $_POST['dia_ini'];
 $hora_fin = $_POST['hora_fin'];
@@ -24,9 +23,16 @@ $datetime_ini = $dia_ini . ' ' . $hora_ini;
 $datetime_fin = $dia_fin . ' ' . $hora_fin;
 
 //echo $datetime;
-if (empty($id_tecnicos_novos)) {
+if (isset($_POST['tecnicos_selecionados']) == null) {
+    $sql_eliminaTudo = "delete FROM tecnico_servico where id_servico=" . $id_servico;
+    
+     $query_delete = $conn_meta->prepare($sql_eliminaTudo);
+        $query_delete->execute();
+        
+   
     return 0;
 }
+$id_tecnicos_novos=$_POST['tecnicos_selecionados'];
 
 $sql_select_tecnico_servico = $conn_meta->prepare("SELECT id_tecnico FROM tecnico_servico where id_servico='" . $id_servico . "'");
 $sql_select_tecnico_servico->execute();
@@ -77,25 +83,22 @@ if (isset($id_tecnicos_novos) && empty($select_existentes)) {
 
     $len = count($ids_to_remove);
     if ($len >= 1) {
-        $delete_ids = "DELETE FROM tecnico_servico WHERE id_servico='" . $id_servico . "' and ";
+        $delete_ids = "DELETE FROM tecnico_servico WHERE id_servico='" . $id_servico . "' and (";
         $i = 0;
 
         foreach ($ids_to_remove as $key => $value) {
             if ($i == $len - 1) {
                 $delete_ids .= "id_tecnico = '" . $value . "'";
             } else {
-                $delete_ids .= "(id_tecnico = '" . $value . "' or ";
+                $delete_ids .= " id_tecnico = '" . $value . "' or ";
             }
-            if ($len - 1 == $i && $len >= 2)
-                $delete_ids .= ")";
-
             $i++;
         }
-
-        echo $delete_ids; //query to delete ids tecnicos 'desatribuidos'
+        $delete_ids .= ")";
+        //echo $delete_ids; //query to delete ids tecnicos 'desatribuidos'
         //echo "<br>";
-        //$query_delete = $conn_meta->prepare($delete_ids);
-        //$query_delete->execute();
+        $query_delete = $conn_meta->prepare($delete_ids);
+        $query_delete->execute();
     }
 
     $len = count($ids_to_insert);

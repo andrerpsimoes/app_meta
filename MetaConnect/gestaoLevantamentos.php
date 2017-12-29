@@ -233,6 +233,56 @@ $areas = $sql_areas->fetchAll();
             });
             $('#info_modal').modal('open');
         },
+
+        guardarModalInfo: function () {
+            var idservico = gestaoLevantamento.idservico;
+            var check = $('#checkLev').is(':checked');
+            if (check == true) {
+
+                $.ajax({
+                    type: "POST",
+                    data: {id_servico: idservico},
+                    url: 'php/Levantamentos/concludedLev.php',
+                    success: function (response) {
+                        $.ajax({
+                            url: 'php/Levantamentos/tableLev.php',
+                            success: function (response) {
+                                $('#tableContainer').html(response);
+                                Materialize.toast('Levantamento concluído!', 3000, 'rounded');
+                            },
+                            error: function () {
+                                alert(gestaoLevantamento.MensagemErro);
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert(gestaoLevantamento.MensagemErro);
+                    }
+                });
+            } else {
+                $.ajax({
+                    type: "POST",
+                    data: {id_servico: idservico},
+                    url: 'php/Levantamentos/notConcludedLev.php',
+                    success: function (response) {
+                        $.ajax({
+                            url: 'php/Levantamentos/tableLev.php',
+                            success: function (response) {
+                                $('#tableContainer').html(response);
+                                Materialize.toast('Levantamento atualizado!', 3000, 'rounded');
+                            },
+                            error: function () {
+                                alert(gestaoLevantamento.MensagemErro);
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert(gestaoLevantamento.MensagemErro);
+                    }
+                });
+            }
+        },
+
         atribuirServico: function (id_this) {
             gestaoLevantamento.idservico = id_this.closest('tr').attr('id');
             $.ajax({
@@ -363,6 +413,10 @@ $areas = $sql_areas->fetchAll();
         $("#guardarAssignButton").click(function () {
             gestaoLevantamento.guardarModalAssign();
         });
+        $("#guardarInfoButton").click(function () {
+            gestaoLevantamento.guardarModalInfo();
+        });
+
         $("#BtnOrder").click(function () {
             gestaoLevantamento.orderButton();
         });

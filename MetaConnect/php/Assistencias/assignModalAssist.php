@@ -1,5 +1,5 @@
 <?php
-/*
+
   include("restrito.php");
 
   //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
@@ -7,7 +7,7 @@
   if (isset($_GET['logout'])) {
   session_destroy();
   header("Refresh:0");
-  } */
+  } 
 
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB

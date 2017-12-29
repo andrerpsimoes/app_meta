@@ -1,13 +1,13 @@
 <?php
-/*
-  include("restrito.php");
+
+include("../../restrito.php");
 
   //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
   //iniciada, como ve que nao tem este e redirecionado para a pagina incial
   if (isset($_GET['logout'])) {
   session_destroy();
   header("Refresh:0");
-  } */
+  } 
 
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
@@ -174,6 +174,33 @@ $telefone = $infoClienteResult['strTelefone'];
         <div class = "input-field col s12" style="word-wrap: break-word;">
             <?php
             echo "<b>Observações : </b>" . $observacoes;
+            ?>
+        </div>
+    </div>
+
+    <?php
+    $tec_serv = $conn_meta->prepare("SELECT ts.data_inicio, ts.data_fim, ts.id_tecnico, Tbl_Funcionarios.strNome AS nome, 
+SUBSTRING(Tbl_Funcionarios.strNome, 1, CHARINDEX(' ', Tbl_Funcionarios.strNome) - 1)+' '+
+REVERSE(SUBSTRING(REVERSE(Tbl_Funcionarios.strNome), 1, CHARINDEX(' ', REVERSE(Tbl_Funcionarios.strNome)) - 1)) AS PrimeiroUltimo
+FROM Emp_999.dbo.Tbl_Grh_Funcionarios WITH (NOLOCK)
+INNER JOIN Emp_999.dbo.Tbl_Funcionarios WITH (NOLOCK) ON (Emp_999.dbo.Tbl_Grh_Funcionarios.intCodigo=Emp_999.dbo.Tbl_Funcionarios.intCodigo)
+inner join tecnico_servico ts on ts.id_tecnico = Emp_999.dbo.Tbl_Grh_Funcionarios.intCodigo
+where Emp_999.dbo.Tbl_Grh_Funcionarios.strCodExercicio = 'EX 2017' and ts.id_servico = '" . $id_servico . "'
+and Emp_999.dbo.Tbl_Grh_Funcionarios.bitInactivo=0 and Emp_999.dbo.Tbl_Funcionarios.strCodDepartamento='2'
+ORDER BY Emp_999.dbo.Tbl_Grh_Funcionarios.intCodigo");
+    $tec_serv->execute();
+    $tec_servResult = $tec_serv->fetchAll();
+
+    //print_r($tec_servResult);
+    $tecnicos_atribuidos = array();
+    foreach ($tec_servResult as $tecnico_serv) {
+        $tecnicos_atribuidos[] = $tecnico_serv['PrimeiroUltimo'];
+    }
+    ?>
+    <div class = "row" style="margin-bottom: 7px;">
+        <div class = "input-field col s12" style="word-wrap: break-word;">
+            <?php
+            echo "<b>Técnicos Atribuídos: </b>" . implode(", ", $tecnicos_atribuidos);
             ?>
         </div>
     </div>

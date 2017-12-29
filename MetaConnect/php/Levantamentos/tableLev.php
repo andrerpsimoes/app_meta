@@ -1,14 +1,12 @@
 <?php
-
-/*
-  include("restrito.php");
+  include("../../restrito.php");
 
   //caso seja feito o logout a sessao tem de ser destruida e faz o refresh pois vai verificar outra vez se tem sessao
   //iniciada, como ve que nao tem este e redirecionado para a pagina incial
   if (isset($_GET['logout'])) {
   session_destroy();
   header("Refresh:0");
-  } */
+  } 
 
 include '../../configs/config.php'; // MetaveiroAppTestes
 include '../../configs/config2.php'; // eticadata DB
@@ -30,9 +28,9 @@ $tableLev = '
                                 <tbody>';
 
 
-$statement = $conn_meta->prepare("select s.id, s.counter, s.id_cliente, s.observacoes, s.recebido_por, s.prioridade, s.data_hora, s.estado, cab.CA_Assistencia
+$statement = $conn_meta->prepare("select s.id, s.counter, s.id_cliente, s.observacoes, s.recebido_por, s.prioridade, s.data_hora, s.estado, cab.CA_Levantamento
 
-from servico s left join Emp_999.dbo.Mov_Venda_Cab cab on s.counter=cab.CA_Assistencia
+from servico s left join Emp_999.dbo.Mov_Venda_Cab cab on s.counter=cab.CA_Levantamento
 
 where s.tipo_servico=1 and s.is_active=1
 order by s.counter desc");
@@ -43,9 +41,9 @@ $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($results as $result) {
     
     $cor='background-color:';
-    if($result['estado']=='1' && $result['CA_Assistencia']==$result['counter'])
+    if($result['estado']=='1' && $result['CA_Levantamento']==$result['counter'])
        $cor .='green;';
-    else if($result['estado']=='0' && $result['CA_Assistencia']==$result['counter'])
+    else if($result['estado']=='0' && $result['CA_Levantamento']==$result['counter'])
        $cor .='orange;';
     else if($result['estado']=='1')
        $cor .= 'yellow;';

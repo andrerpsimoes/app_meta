@@ -1,4 +1,6 @@
 <?php
+
+
 include 'configs/config.php'; //meta DB
 session_start();
 $error = "";
